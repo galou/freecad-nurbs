@@ -23,9 +23,11 @@ import random
 
 import os, nurbswb
 
+from .debug import reload_module
+
 global __dir__
 __dir__ = os.path.dirname(nurbswb.__file__)
-print __dir__
+print(__dir__)
 
 ##\endcond
 
@@ -42,7 +44,7 @@ def Myarray2Poly(arr,bb):
 	comp=[]
 	print pst.shape
 	for i,pps in enumerate(pst):
-		if i == 0: continue 
+		if i == 0: continue
 
 		pvs=[FreeCAD.Vector(p) for p in pps]
 		# print pvs
@@ -62,7 +64,7 @@ def Myarray2Poly(arr,bb):
 	comp.append(pol)
 
 	for i,pps in enumerate(pst):
-		if i == 0: continue 
+		if i == 0: continue
 		pvs=[FreeCAD.Vector(pps[0]),FreeCAD.Vector(bb[i]),FreeCAD.Vector(pps[-1])]
 		pol=Part.makePolygon(pvs)
 		comp.append(pol)
@@ -119,7 +121,7 @@ def createBS(arr):
 		ku=[1.0/(NbUPoles-1)*i for i in range(NbUPoles)]
 		mu=[2]+[1]*(NbUPoles-2)+[2]
 
-		# bug 
+		# bug
 		ku=[1.0/(NbUPoles)*i for i in range(NbUPoles+1)]
 		mu=[1]*(NbUPoles+1)
 		print len(ps)
@@ -141,7 +143,7 @@ def createBS(arr):
 
 def createSimpleBSC(pols, degree=3):
 	''' createSimpleBSC(pols): create a BSpline Curve with poles pols
-	
+
 	'''
 
 	bc=Part.BSplineCurve()
@@ -164,11 +166,11 @@ def createSimpleBSC(pols, degree=3):
 def Xrun():
 	''' run(): test script
 	creates the surface and some helpers
-	
+
 	'''
 
 
-	# get the poles from shoe.py 
+	# get the poles from shoe.py
 	pts=FreeCAD.shoe_pst.copy()
 	pts[:,:,1] *= -1
 
@@ -279,8 +281,8 @@ def toUVMesh(bs, uf=5, vf=5):
 		uc=uf*bs.NbUPoles
 		vc=vf*bs.NbVPoles
 		ss=[]
-		for x in range(uc+1): 
-			for y in range(vc+1): 
+		for x in range(uc+1):
+			for y in range(vc+1):
 				ss.append(bs.value(1.0/uc*x,1.0/vc*y))
 
 		mm=np.array(ss)[:,2].max()
@@ -291,10 +293,10 @@ def toUVMesh(bs, uf=5, vf=5):
 		topfaces=[]
 		x=0
 		x=-1
-		for y in range(-1,vc): 
+		for y in range(-1,vc):
 			topfaces.append(((vc+1)*x+y,(vc+1)*x+y+1,len(ss)-2))
 		x=uc+1
-		for y in range(-1,vc): 
+		for y in range(-1,vc):
 			topfaces.append(((vc+1)*x+y,(vc+1)*x+y+1,len(ss)-1))
 
 		#t=Mesh.Mesh((ss,topfaces))
@@ -303,9 +305,9 @@ def toUVMesh(bs, uf=5, vf=5):
 
 
 		faces=[]
-		for x in range(-1,uc): 
-			for y in range(-1,vc+1): 
-				#if max((vc+1)*x+y,(vc+1)*x+y+1,(vc+1)*(x+1)+y,(vc+1)*x+y+1,(vc+1)*(x+1)+y+1,(vc+1)*(x+1)+y)<50000: 
+		for x in range(-1,uc):
+			for y in range(-1,vc+1):
+				#if max((vc+1)*x+y,(vc+1)*x+y+1,(vc+1)*(x+1)+y,(vc+1)*x+y+1,(vc+1)*(x+1)+y+1,(vc+1)*(x+1)+y)<50000:
 				#if len(faces)<100000:
 					faces.append(((vc+1)*x+y,(vc+1)*x+y+1,(vc+1)*(x+1)+y))
 					faces.append(((vc+1)*x+y+1,(vc+1)*(x+1)+y+1,(vc+1)*(x+1)+y))
@@ -425,7 +427,7 @@ def npa2ssa(arr,spreadsheet,c1,r1,color=None):
 		for r in range(r1,r2):
 			cn=cellname(c1,r)
 			ss.set(cn,str(arr[r-r1]))
-			if color<>None: ss.setBackground(cn,color)
+			if color is not None: ss.setBackground(cn,color)
 	else:
 		for r in range(r1,r2):
 			for c in range(c1,c2):
@@ -433,7 +435,7 @@ def npa2ssa(arr,spreadsheet,c1,r1,color=None):
 				#print (cn,c,r,arr[r-r1,c-c1])
 				ss.set(cn,str(arr[r-r1,c-c1]))
 				#print ("!!",cn,c,r,arr[r-r1,c-c1],ss.get(cn))
-				if color<>None: ss.setBackground(cn,color)
+				if color is not None: ss.setBackground(cn,color)
 
 def gendata(ss,twister,sc):
 	print ("gendata",ss.Label)
@@ -462,7 +464,7 @@ def gendata(ss,twister,sc):
 	App.activeDocument().recompute()
 
 
-## spreadsheat to numpy array 
+## spreadsheat to numpy array
 def ssa2npa(spreadsheet,c1,r1,c2,r2,default=None):
 	''' create array from table'''
 
@@ -572,7 +574,7 @@ class Needle(PartFeature):
 	##endcond
 
 	def onChanged(self, fp, prop):
-		
+
 		if prop == 'useSpreadsheet':
 			if fp.useSpreadsheet:
 				if fp.Spreadsheet == None:
@@ -586,7 +588,7 @@ class Needle(PartFeature):
 	def execute(proxy,obj):
 #		print("execute ")
 		if obj.noExecute: return
-		try: 
+		try:
 			if proxy.lock: return
 		except:
 			print("except proxy lock")
@@ -606,19 +608,19 @@ class Needle(PartFeature):
 		#for r in obj.Ribs:
 		for r in ribs:
 			# pols=r.Points
-			
+
 			#pols=r.Shape.Edge1.Curve.discretize(obj.MeridiansCount)
 			pols=r.Shape.Edge1.Curve.getPoles()
-			
+
 			#c=[[v[0],v[1],v[2]] for v in pols]
 			c=[[v[2],v[0],v[1]] for v in pols]
-			curves += c 
+			curves += c
 
 		if  len(obj.Ribs)>0:
 			curves=np.array(curves)
 			curves=curves.reshape(len(obj.Ribs),len(pols),3)
 
-		if obj.backboneSource <> None and not obj.externSourcesOff:
+		if obj.backboneSource  !=  None and not obj.externSourcesOff:
 			cs=obj.backboneSource.Shape.Edge1.Curve
 			bb=obj.backboneSource.Points
 			bl=len(bb)
@@ -649,7 +651,7 @@ class Needle(PartFeature):
 #			print bbc.tangent(v)
 			t=bbc.tangent(v)[0]
 			p=bbc.value(v)
-#			
+#
 #			print t
 			zarc=np.arctan2(t.y,t.x)
 			zarc *=180.0/np.pi
@@ -660,7 +662,7 @@ class Needle(PartFeature):
 
 		#	print twister[n]
 			# twister[n]=[0,0,harc]
-			
+
 		#	print twister[n]
 		print ("len twister",len(twister))
 		#print twister
@@ -684,7 +686,7 @@ class Needle(PartFeature):
 #			(nn,comp)=Myarray2Poly(poles,bb)
 #
 #			try: poly=App.ActiveDocument.Poly
-#			except: 
+#			except:
 #				poly=App.activeDocument().addObject("Part::Compound",'Poly')
 #				poly.ViewObject.PointSize = 10.00
 #
@@ -707,7 +709,7 @@ class Needle(PartFeature):
 
 		if obj.Backbone == None:
 			obj.Backbone=App.activeDocument().addObject('Part::Feature','Backbone')
-		
+
 		#obj.Backbone.Shape=Part.makePolygon([FreeCAD.Vector(b) for b in bb])
 		bs=Part.BSplineCurve()
 		#bs.buildFromPoles(bb)
@@ -736,7 +738,7 @@ class Needle(PartFeature):
 
 	def createMesh(proxy,obj,bs):
 			vb=True
-			if obj.Mesh <> None:
+			if obj.Mesh  !=  None:
 				vb=obj.Mesh.ViewObject.Visibility
 				App.activeDocument().removeObject(obj.Mesh.Name)
 			obj.Mesh=toUVMesh(bs,obj.MeshUCount,obj.MeshVCount)
@@ -744,7 +746,7 @@ class Needle(PartFeature):
 
 	def createRibCage(proxy,obj,bs):
 		# deaktivert
-		return 
+		return
 
 		rc=obj.RibCount
 
@@ -819,7 +821,7 @@ class Needle(PartFeature):
 		self.updateSS(m.curve,m.bb,m.sc,m.twister)
 
 	def Model(self):
-		''' get model data from Spreadsheet 
+		''' get model data from Spreadsheet
 		returns tuple: curve, backbone, scaler, twister
 		'''
 		ss=self.Object.Spreadsheet
@@ -864,7 +866,7 @@ class Needle(PartFeature):
 
 	def pressed(self,index):
 		import nurbswb.needle_cmds
-		reload(nurbswb.needle_cmds)
+		reload_module(nurbswb.needle_cmds)
 		nurbswb.needle_cmds.pressed(index,App.activeDocument().MyNeedle)
 		print "Pressed"
 
@@ -872,7 +874,7 @@ class Needle(PartFeature):
 		print "Changed"
 		self.dumpix(index)
 
-	def dumpix(self,index): 
+	def dumpix(self,index):
 		print ("dumpix", index.row(),index.column(),(getdata(index)))
 		self.show(getdata(index))
 
@@ -904,7 +906,7 @@ class Needle(PartFeature):
 def importCurves(obj):
 	ss=obj.Spreadsheet
 	print ss.Label
-	if obj.ribtemplateSource <> None and not obj.externSourcesOff:
+	if obj.ribtemplateSource  !=  None and not obj.externSourcesOff:
 		cs=obj.ribtemplateSource.Shape.Edge1.Curve
 		curve=cs.getPoles()
 		cl=len(curve)
@@ -912,7 +914,7 @@ def importCurves(obj):
 		print "update curve",curve
 
 
-	if obj.backboneSource <> None and not obj.externSourcesOff:
+	if obj.backboneSource  !=  None and not obj.externSourcesOff:
 		cs=obj.backboneSource.Shape.Edge1.Curve
 		bb=cs.getPoles()
 		bl=len(bb)
@@ -945,7 +947,7 @@ def commitData(editor):
 #	print ("commit data",editor)
 
 	import nurbswb.needle_cmds
-	reload(nurbswb.needle_cmds)
+	reload_module(nurbswb.needle_cmds)
 	global globdat
 #	print globdat
 	if globdat[0]=='ccmd':
@@ -963,9 +965,9 @@ def startssevents2():
 
 	App.activeDocument().Spreadsheet.ViewObject.startEditing(0)
 	subw=mdiarea.subWindowList()
-#	print len(subw)
+	# print(len(subw))
 	for i in subw:
-#		print i.widget().metaObject().className()
+		# print(i.widget().metaObject().className())
 		if i.widget().metaObject().className() == "SpreadsheetGui::SheetView":
 			sheet = i.widget()
 			table=sheet.findChild(QtGui.QTableView)
@@ -984,13 +986,13 @@ def startssevents2():
 	from PySide import QtCore
 	class SheetFilter(QtCore.QObject):
 		def eventFilter(self,obj,event):
-			print type(event)
+			print(type(event))
 			return False
 
 	filter=SheetFilter()
 	table.installEventFilter(filter)
 	# table.removeEventFilter(filter)
- 
+
 '''
 
 
@@ -1040,7 +1042,7 @@ def getdata(index):
 def main_test():
 	# test aus parametern
 	import nurbswb.shoe as shoe
-	reload( nurbswb.shoe)
+	reload_module( nurbswb.shoe)
 
 	dokname=FreeCAD.ParamGet('User parameter:Plugins/shoe').GetString("Document","Shoe")
 	try: App.closeDocument(dokname)
@@ -1132,21 +1134,21 @@ def main_test():
 
 
 		Gui.SendMsgToActiveView("ViewFit")
-		print "fertig"
-		 
+		print("ready")
+
 
 
 		needle.importCurves(a)
 		needle.importCurves(b)
-		
+
 	App.activeDocument().recompute()
 	App.activeDocument().recompute()
 	Gui.SendMsgToActiveView("ViewFit")
 
 
-	print a
+	print(a)
 	for r in a.Ribs:
-		print r.Label
+		print(r.Label)
 
 def genss(sk):
 		''' ribs aus daten'''
@@ -1159,10 +1161,10 @@ def genss(sk):
 		points=ps
 
 #		p=points[0]
-#		ps=[FreeCAD.Vector(0,p.y-5,p.z),FreeCAD.Vector(0,p.y-10,p.z)]+points+[FreeCAD.Vector(0,p.y+10,p.z),FreeCAD.Vector(0,p.y+5,p.z)] 
+#		ps=[FreeCAD.Vector(0,p.y-5,p.z),FreeCAD.Vector(0,p.y-10,p.z)]+points+[FreeCAD.Vector(0,p.y+10,p.z),FreeCAD.Vector(0,p.y+5,p.z)]
 #		points=ps
 
-		print len(points)
+		print(len(points))
 		return sk
 
 
@@ -1181,7 +1183,7 @@ def genss(sk):
 # <a href='http://freecadbuch.de/doku.php?id=shoe'>Anwender Doku</a>
 #
 
- 
+
 def run():
 	''' shoe.run() '''
 
@@ -1213,10 +1215,10 @@ def run():
 
 
 
-	print "import ............"
-	# import the configuration from shoedata 
+	print("import ............")
+	# import the configuration from shoedata
 	import nurbswb.shoedata
-	reload(nurbswb.shoedata)
+	reload_module(nurbswb.shoedata)
 
 	bbps=nurbswb.shoedata.shoeAdam.bbps
 	boxes=nurbswb.shoedata.shoeAdam.boxes
@@ -1226,11 +1228,11 @@ def run():
 
 	# create the shoe ribs
 	import nurbswb.createshoerib
-	reload(nurbswb.createshoerib)
+	reload_module(nurbswb.createshoerib)
 
 	ribs=[nurbswb.createshoerib.run("rib_"+str(i),[[8,0,0]],boxes[i],zoff=0) for i in range(1,15)]
 
-	# for debugging 
+	# for debugging
 	FreeCAD.ribs=ribs
 
 	# create a backbone curve
@@ -1271,11 +1273,11 @@ def run():
 	FreeCADGui.runCommand("Draft_ToggleGrid")
 
 	# load a scanned last to compare if available
-	try: 
+	try:
 		Points.insert(__dir__+"/../testdata/shoe_last_scanned.asc","Shoe")
 		App.ActiveDocument.shoe_last_scanned.ViewObject.ShapeColor=(1.0,.0,.0)
 		App.ActiveDocument.shoe_last_scanned.ViewObject.PointSize=1
-	except: 
+	except:
 		pass
 
 	# create lofts from the creates curves
@@ -1363,7 +1365,7 @@ def run():
 	a.vmin=2
 	a.Label="Fein Segment gesamt"
 
-	# transform the poles array 
+	# transform the poles array
 	s=nurbswb.segment.createNurbsTrafo()
 	s.source=App.ActiveDocument.Poles
 

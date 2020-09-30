@@ -23,6 +23,9 @@ import numpy as np
 import PySide
 from PySide import  QtGui,QtCore
 
+from .debug import reload_module
+
+
 def run(window):
 
 	anz=int(window.anz.text())
@@ -141,7 +144,7 @@ class Monitor(PartFeature):
 		obj.addProperty("App::PropertyBool","noExecute" ,"Base")
 		obj.addProperty("App::PropertyEnumeration","mode" ,"Base")
 		obj.mode=['lenght','force']
-		
+
 		ViewProvider(obj.ViewObject)
 
 	def onDocumentRestored(self, fp):
@@ -156,7 +159,7 @@ class Monitor(PartFeature):
 
 	def execute(proxy,obj):
 		if obj.noExecute: return
-		try: 
+		try:
 			if proxy.lock: return
 		except:
 			print("except proxy lock")
@@ -179,7 +182,7 @@ class Monitor(PartFeature):
 #			print (pts[i]-pts[i-1]).normalize().cross((pts[i+1]-pts[i]).normalize())
 #			print (pts[i]-pts[i-1]).normalize().dot((pts[i+1]-pts[i]).normalize())
 #			print ll
-#			
+#
 			print "!! ",np.arctan2(ll,ls)*180./np.pi
 			su += np.arctan2(ll,ls)*180./np.pi
 
@@ -200,7 +203,7 @@ class Monitor(PartFeature):
 		su=round(su,2)
 
 		try: proxy.dialog
-		except: 
+		except:
 			proxy.dialog=dialogForce()
 		try:
 			proxy.dialog.l.setText("Forces for " + str(obj.source.Label))
@@ -216,7 +219,7 @@ class Monitor(PartFeature):
 
 	def myexecute(proxy,obj):
 		try: proxy.dialog
-		except: 
+		except:
 			proxy.dialog=dialog()
 		try:
 			proxy.dialog.l.setText("Curve length for " + str(obj.source.Label))
@@ -226,7 +229,7 @@ class Monitor(PartFeature):
 		proxy.dialog.maxa.setText("MAX: " +str(obj.maxVal))
 		proxy.dialog.show()
 		mm=20
-		if obj.source <> None:
+		if obj.source  !=  None:
 #			try:
 				print obj.source.Label
 				print ("Value and interval:", round(obj.source.Shape.Edge1.Length,1),obj.minVal,obj.maxVal)
@@ -296,7 +299,7 @@ if __name__ == '__main__':
 	try:
 		import nurbswb
 		import nurbswb.createsketchspline
-		reload(nurbswb.createsketchspline)
+		reload_module(nurbswb.createsketchspline)
 		nurbswb.createsketchspline.run()
 		spline=App.ActiveDocument.ActiveObject
 	except:

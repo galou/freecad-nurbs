@@ -89,7 +89,7 @@ def  fv2(name="vertical",title=''):
 #	w=MyDockWidget(t,"Reconstruction WB")
 	w=MyWidget(t,"Reconstruction WB")
 
-	if title <>'': w.setWindowTitle(title)
+	if title  != '': w.setWindowTitle(title)
 
 
 	w.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
@@ -110,7 +110,7 @@ def  fv(name="vertical",title=''):
 	
 ###	w.setStyleSheet("QWidget { font: bold 18px;color:brown;border-style: outset;border-width: 3px;border-radius: 10px;border-color: blue;}")
 
-	if title <>'': w.setWindowTitle(title)
+	if title  != '': w.setWindowTitle(title)
 	
 	layout = QtGui.QVBoxLayout()
 	layout.setAlignment(QtCore.Qt.AlignTop)
@@ -133,7 +133,7 @@ def  fv3(name="vertical",title=''):
 	w=QtGui.QWidget()
 #	w.setStyleSheet("QWidget { font: bold 18px;color:brown;border-style: outset;border-width: 3px;border-radius: 10px;border-color: blue;}")
 
-	if title <>'': w.setWindowTitle(title)
+	if title  != '': w.setWindowTitle(title)
 
 	layout = QtGui.QVBoxLayout()
 	layout.setAlignment(QtCore.Qt.AlignTop)
@@ -162,7 +162,7 @@ def  fh(name="horizontal",title=''):
 	#pB.setStyleSheet("QWidget { font: bold 18px;color:red;border-style: outset;border-width: 3px;border-radius: 10px;border-color: blue;}")
 	#layout.addWidget(pB)
 
-	if title <>'': w.setWindowTitle(title)
+	if title  != '': w.setWindowTitle(title)
 	#w.show()
 	#ComboViewShowWidget(w,False)
 	w.layout=layout
@@ -180,7 +180,7 @@ def  fh2(name="vertik horizontal",title=''):
 	#pB= QtGui.QLabel("name")
 	#pB.setStyleSheet("QWidget { font: bold 18px;color:red;border-style: outset;border-width: 3px;border-radius: 10px;border-color: blue;}")
 	#layout.addWidget(pB)
-	if title <>'': w.setWindowTitle(title)
+	if title  != '': w.setWindowTitle(title)
 	#w.show()
 	#ComboViewShowWidget(w,False)
 	w.layout=layout
@@ -434,7 +434,7 @@ class Miki():
 						l.append(None)
 					l.append(h)
 					self.objects.append(h)
-			if  l[2] <> 0:
+			if  l[2]  !=  0:
 				if l[4]=='Name': continue
 				if l[3]=='obj' or  l[3]=='anchor':
 					parent=self.lines[l[2]][7]
@@ -559,7 +559,7 @@ class Miki():
 
 	def showSo(self):
 		for l in self.lines:
-			if  l[2] == 0 and l[0] <>-1:
+			if  l[2] == 0 and l[0]  != -1:
 #					print l
 					if len(l)<7:
 						continue
@@ -574,7 +574,7 @@ class Miki():
 
 	def showSo2(self,dokname):
 		for l in self.lines:
-			if  l[2] == 0 and l[0] <>-1:
+			if  l[2] == 0 and l[0]  != -1:
 #					print l
 					r=l[7]
 #					print r
@@ -648,7 +648,7 @@ class Miki():
 
 		if debug:  print "showSo ..."
 		self.showSo()
-		if cmd<>None:
+		if cmd is not None:
 			print "CMD ..."
 			print cmd 
 			cmd()

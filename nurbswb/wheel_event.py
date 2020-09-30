@@ -205,7 +205,7 @@ class EventFilter(QtCore.QObject):
 				#self.modedat[self.mode]=self.mouseWheel
 				self.dialog.ef_action("wheel",self,self.mouseWheel)
 
-				noDefaultWheel = self.mode<>'n'
+				noDefaultWheel = self.mode != 'n'
 				
 				if noDefaultWheel:
 					return True 
@@ -724,7 +724,7 @@ class MyWidget(QtGui.QWidget):
 
 	def target(self,dok,cords=(0,0,0),coordlist=[]):
 		''' set changed pole to '''
-		if len(coordlist)>1 and coordlist[0]<>coordlist[1]:
+		if len(coordlist)>1 and coordlist[0] != coordlist[1]:
 			col=Part.makePolygon(coordlist)
 			v=Part.makeCompound([col])
 		else:
@@ -771,7 +771,7 @@ class MyWidget(QtGui.QWidget):
 #		print ('pl,pos,lpos,rpos',pl,pos,lpos,rpos)
 
 
-		if  self.imode<>3:
+		if  self.imode != 3:
 			diff=FreeCAD.Vector()
 			ef=self.ef
 			if ef.key in  ['x','y','z']:
@@ -916,7 +916,7 @@ class MyWidget(QtGui.QWidget):
 
 		# all together 
 		bb.Shape=Part.Compound([pol])
-		if ppax<>[]:
+		if ppax != []:
 			bax.Shape=Part.Compound(ppax + [bs.toShape()])
 
 		dok.recompute()
@@ -1083,7 +1083,7 @@ class MyWidget(QtGui.QWidget):
 
 		# all together 
 		bb.Shape=Part.Compound([pol])
-		if ppax<>[]:
+		if ppax != []:
 			bax.Shape=Part.Compound(ppax + [bs.toShape(),sss])
 
 		dok.recompute()
@@ -1260,8 +1260,8 @@ class SelObserver:
 		#App.Console.PrintMessage("addSelection"+ "\n")
 		#App.Console.PrintMessage(str(sub)+ "\n")          # The part of the object name
 		# App.Console.PrintMessage(str(pnt)+ "\n")          # Coordinates of the object
-		if str(doc) <> 'Aux': return
-		if str(obj) <> 'TargetCurve': return
+		if str(doc)  !=  'Aux': return
+		if str(obj)  !=  'TargetCurve': return
 		sel=str(sub)
 		if sel.startswith('Vertex'):
 			nr=sel[6:]

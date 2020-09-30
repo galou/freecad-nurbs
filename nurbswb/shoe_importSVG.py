@@ -546,7 +546,7 @@ class svgHandler(xml.sax.ContentHandler):
 				# processing paths
 				print "filter spezielle pfade ......................"
 				print self.obj.ignore
-				if pathname<>None:
+				if pathname is not None:
 					for s in self.obj.ignore:
 						print (pathname,name,s)
 						if pathname.startswith(s):

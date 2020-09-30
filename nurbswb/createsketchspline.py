@@ -135,7 +135,7 @@ def runobj(obj,label=None):
 	''' erzeugt fuer ein objekt den SketchSpline'''
 
 	sk=createSketchSpline(obj.Shape.Edge1.Curve.getPoles(),str(obj.Label) + " Sketch" )
-	if label <>None: sk.Label=label
+	if label  is not None: sk.Label=label
 	return sk
 
 def runsubs():

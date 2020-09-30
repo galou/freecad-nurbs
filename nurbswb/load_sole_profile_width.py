@@ -12,10 +12,11 @@ import FreeCADGui
 import os
 import nurbswb
 
+from .debug import reload_module
 import nurbswb.spreadsheet_lib
-reload(nurbswb.spreadsheet_lib)
+reload_module(nurbswb.spreadsheet_lib)
 import nurbswb.sole
-reload(nurbswb.sole)
+reload_module(nurbswb.sole)
 
 
 from nurbswb.spreadsheet_lib import cellname
@@ -26,7 +27,7 @@ from nurbswb.say import *
 
 def runa():
 	''' load the data from the first sketch in file fn
-	writes the data into the spreadsheet 
+	writes the data into the spreadsheet
 	and recomputes the sole
 	'''
 

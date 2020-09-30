@@ -8,7 +8,7 @@ def showdialog(title="Fehler",text="Schau in den ReportView fuer mehr Details",d
 	msg.setIcon(QtGui.QMessageBox.Warning)
 	msg.setText(text)
 	msg.setWindowTitle(title)
-	if detail<>None:   msg.setDetailedText(detail)
+	if detail is not None:   msg.setDetailedText(detail)
 	msg.exec_()
 
 
@@ -147,7 +147,7 @@ class Trafo(nurbswb.pyob.FeaturePython):
 	def myexecute(self,obj):
 
 		#calculate the point coordinats for source and target frame
-		if obj.source<>None:
+		if obj.source is not None:
 			pts1= np.float32([(p.x,p.y) for p in obj.source.Points])
 		else:
 			tpts1=[obj.model.Shape.BoundBox.getPoint(i) for i in range(4)]
@@ -249,7 +249,7 @@ def run():
 		raise Exception("nothing selected")
 
 	model=Gui.Selection.getSelection()[0]
-	if model.Shape.Edge1.Curve.__class__.__name__ <>'BSplineCurve':
+	if model.Shape.Edge1.Curve.__class__.__name__  != 'BSplineCurve':
 		print model.Label
 		print model.Shape.Edge1.Curve.__class__.__name__
 		showdialog('Error','edge of the selected curve is not a BSpline','method is only implemented for BSpline Curves')
@@ -279,7 +279,7 @@ def run():
 	b.target=line2
 	b.model=model
 	b.center=center
-	b.useCenter= center <> None
+	b.useCenter= center  !=  None
 
 	FreeCAD.activeDocument().recompute()
 

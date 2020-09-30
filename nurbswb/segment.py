@@ -276,7 +276,7 @@ def runsegment():
 	'''Anwendungsfall fuer die Gui.Selection wird ein Segment erzeugt'''
 
 	source=None
-	if len( Gui.Selection.getSelection())<>0:
+	if len( Gui.Selection.getSelection()) != 0:
 		source=Gui.Selection.getSelection()[0]
 	s=createSegment()
 	s.source=source
@@ -287,7 +287,7 @@ def runfinesegment():
 	'''Anwendungsfall fuer die Gui.Selection wird ein FineSegement erzeugt'''
 
 	source=None
-	if len( Gui.Selection.getSelection())<>0:
+	if len( Gui.Selection.getSelection()) != 0:
 		source=Gui.Selection.getSelection()[0]
 	s=createFineSegment()
 	s.source=source
@@ -296,7 +296,7 @@ def runnurbstrafo():
 	'''Anwendungsfall fuer die Gui.Selection wird ein NurbsTrafo erzeugt'''
 
 	source=None
-	if len( Gui.Selection.getSelection())<>0:
+	if len( Gui.Selection.getSelection()) != 0:
 		source=Gui.Selection.getSelection()[0]
 	s=createNurbsTrafo()
 	s.source=source

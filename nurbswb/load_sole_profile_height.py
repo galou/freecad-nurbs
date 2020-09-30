@@ -16,12 +16,13 @@ import os, nurbswb
 global __dir__
 __dir__ = os.path.dirname(nurbswb.__file__)
 
+from .debug import reload_module
 import nurbswb.spreadsheet_lib
-reload (nurbswb.spreadsheet_lib)
+reload_module (nurbswb.spreadsheet_lib)
 from nurbswb.spreadsheet_lib import ssa2npa, npa2ssa, cellname
 
 #\endcond
-# from nurbswb.errors import showdialog 
+# from nurbswb.errors import showdialog
 
 from nurbswb.say import *
 
@@ -47,7 +48,7 @@ def run():
 		try:
 			s=sss[0]
 			c=s.Shape.Edge1.Curve
-		except: 
+		except:
 			showdialog("Error","Height profile document has no sketch")
 
 
@@ -81,8 +82,8 @@ def run():
 
 		dok2.recompute()
 		import nurbswb.sole
-		reload(nurbswb.sole)
+		reload_module(nurbswb.sole)
 		nurbswb.sole.run()
 		dok2.recompute()
 
-	except : showdialog() 
+	except : showdialog()

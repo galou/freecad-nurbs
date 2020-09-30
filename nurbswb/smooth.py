@@ -20,6 +20,7 @@ import random
 import Draft
 import numpy as np
 
+from .debug import reload_module
 
 Gui=FreeCADGui
 import Part
@@ -79,12 +80,12 @@ def runtaubin(obj):
 	else:
 		try: pts=obj.Wire.Shape.discretize(obj.discretizeCount)
 		except: pts=obj.Wire.Shape.Wire1.discretize(obj.discretizeCount)
-	
-	
+
+
 	qts=np.array(pts)
 
 	for j in range(obj.count):
-		
+
 		a=len(pts)
 		if j%2==0:
 			f=0.01*obj.pf
@@ -111,7 +112,7 @@ def runtaubin(obj):
 		else:
 			obj.Shape=Part.BSplineCurve(pp).toShape()
 	else:
-		obj.Shape=Part.makePolygon(pp)		
+		obj.Shape=Part.makePolygon(pp)
 
 #	App.activeDocument().recompute()
 
@@ -127,14 +128,14 @@ class Taub(PartFeature):
 		obj.addProperty("App::PropertyInteger","count").count=40
 		obj.addProperty("App::PropertyInteger","start").start=1
 		obj.addProperty("App::PropertyInteger","end").end=0
-	
+
 		obj.addProperty("App::PropertyLink","Wire")
 		obj.addProperty("App::PropertyBool","createBSpline","smooth")
 		obj.addProperty("App::PropertyBool","closeBSpline","smooth")
 		obj.addProperty("App::PropertyInteger","discretizeCount").discretizeCount=30
-		
-		
-	
+
+
+
 	def onChanged(self, obj, prop):
 			print "onchange--",prop
 			if prop in ["pf","pf2",'count','discretizeCount','start','end','createBSpline']:
@@ -149,7 +150,7 @@ def smoothWire(sel=None,name=None):
 	a=FreeCAD.ActiveDocument.addObject("Part::FeaturePython",name)
 	Taub(a,"Smooth")
 	#a.Wire=App.ActiveDocument.DWire
-	if sel <>None:
+	if sel  is not None:
 		a.Wire=sel
 	else:
 		try: a.Wire=Gui.Selection.getSelection()[0]
@@ -191,7 +192,7 @@ def run3D(self,mobj):
 		print "iterations ",i
 		print mobj.Lambda
 		print "------------------"
-		
+
 		m.smooth(Method="Taubin",Iteration=i,Lambda=mobj.Lambda*0.01,Micro=mobj.Micro*0.01)
 #		import Mesh
 		#	App.ActiveDocument.ActiveObject.ViewObject.hide()
@@ -224,7 +225,7 @@ class TaubM(PartFeature):
 				run3D(self,obj)
 
 
-	
+
 def smoothMesh():
 	a=FreeCAD.ActiveDocument.addObject("Mesh::FeaturePython","Meshsmooth")
 	TaubM(a,"Smooth")
@@ -250,7 +251,7 @@ def splitMesh():
 	rstep=10
 	ribrange=range(ribc)
 	ribrange=range(1,25)
-	
+
 	#ribrange=[13,14,15,16,17]
 
 	#ribrange=[10]
@@ -375,14 +376,14 @@ def splitMesh():
 					mj=(p-p0).Length
 					ij=i
 			pps2=pps[ij:] +pps[:ij]
-			
+
 
 			p0=pps[ij]
 			if (pps2[1]-p1).Length>(pps2[-1]-p1).Length:
 				pps2.reverse()
 
 			p1=pps2[1]
-			ptsb += [pps2]	
+			ptsb += [pps2]
 			print ij
 		'''
 
@@ -423,7 +424,7 @@ def splitMesh():
 
 
 			import sketch_to_bezier
-			reload (sketch_to_bezier)
+			reload_module (sketch_to_bezier)
 			sk=sketch_to_bezier.createBezierSketch(name="Arc",source=rcc)
 			sk.Placement=pm
 			ribs +=[sk]
@@ -491,12 +492,12 @@ def sliceMeshbySketch():
 	import Draft
 	pol=Part.makePolygon(ptsW)
 	ptsW=pol.discretize(20)
-	
+
 	rcc=Draft.makeWire(ptsW)
 
 	if 0:
 		import sketch_to_bezier
-		reload (sketch_to_bezier)
+		reload_module (sketch_to_bezier)
 		sk=sketch_to_bezier.createBezierSketch(name="Arc",source=rcc)
 
 	s.ViewObject.hide()
@@ -519,7 +520,7 @@ def distanceCurves():
 	ls=0
 	for p,q in zip(ptsa,ptsb):
 		ls += (p-q).Length
-	
+
 	print ("Distance ",a.Label,b.Label,ls/anz)
 
 
@@ -547,7 +548,7 @@ def genbuffer(pts,color=0):
 			#	colix += " "+str(colors[i])
 			colix += " "+str(color)
 		pix += str(p.x)+" "+str(p.y) +" " +str(p.z)+"\n"
-		if i>0:cordix +=  str(i-1)+" "+str(i)+" -1\n" 
+		if i>0:cordix +=  str(i-1)+" "+str(i)+" -1\n"
 
 	buff ='''#Inventor V2.1 ascii
 	Separator {
@@ -559,19 +560,19 @@ def genbuffer(pts,color=0):
 		}
 		Separator {
 			VRMLGroup {
-				children 
+				children
 				VRMLShape {
-					geometry 
+					geometry
 						VRMLIndexedLineSet {
-							coord 
+							coord
 								VRMLCoordinate {
-									point 
+									point
 	'''
 
 	buff += " [" + pix + "]}\n"
 
 	buff +='''
-						color 
+						color
 							VRMLColor {
 								color [ 0 0 0, 1 0 0, 0 1 0,
 										0 0 1, 1 1 0, 0 1 1, 1 0 1 , 1 1 1,

@@ -58,11 +58,11 @@ def createShape(obj):
 	'''create the FilledFace Shape for the edges of obj'''
 
 	lls = []
-	if obj.e1 != None:
+	if obj.e1 is not None:
 		lls += [obj.e1.Shape.Edges[obj.n1 - 1]]
-	if obj.e2 != None:
+	if obj.e2 is not None:
 		lls += [obj.e2.Shape.Edges[obj.n2 - 1]]
-	if obj.e3 != None:
+	if obj.e3 is not None:
 		lls += [obj.e3.Shape.Edges[obj.n3 - 1]]
 
 	# check wire closed !!!

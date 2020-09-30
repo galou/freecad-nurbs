@@ -140,7 +140,7 @@ def qrcodeFace(message='qr',degree=2,showPoints=False,window=None):
 	bv=len(kvs)
 	bu=len(kus)
 
-	if window<>None:
+	if window is not None:
 		window.progressbar.setValue(0)
 
 	if 1:
@@ -152,7 +152,7 @@ def qrcodeFace(message='qr',degree=2,showPoints=False,window=None):
 			Gui.updateGui()
 			fg.Shape=Part.Compound(sps)
 
-			if window<>None:
+			if window is not None:
 				window.progressbar.setValue(10*a/bv)
 
 
@@ -163,14 +163,14 @@ def qrcodeFace(message='qr',degree=2,showPoints=False,window=None):
 			Gui.updateGui()
 			fg.Shape=Part.Compound(sps)
 
-			if window<>None:
+			if window is not None:
 				window.progressbar.setValue(10+10*b/bu)
 
 
 	if degree>0:
 		sps=[]
 		for a in range(0,bv/d+1):
-			if window<>None:
+			if window is not None:
 				window.progressbar.setValue(100*a/(bv/d))
 			FreeCAD.Console.PrintMessage(" "+str(a))
 			for b in range(0,bu/d+1):

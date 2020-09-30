@@ -46,9 +46,9 @@ class FeaturePython:
 		if prop.startswith('_show'):
 			mode= 0 if getattr(obj,prop) else 2
 			for pn in obj.PropertiesList:
-				if obj.getGroupOfProperty(pn).replace(' ','')==prop[5:] and pn<>prop:
+				if obj.getGroupOfProperty(pn).replace(' ','')==prop[5:] and pn != prop:
 					obj.setEditorMode(pn,mode)
-				if obj.getGroupOfProperty(pn).startswith('~') and obj.getGroupOfProperty(pn).replace(' ','')[1:]==prop[5:] and pn<>prop:
+				if obj.getGroupOfProperty(pn).startswith('~') and obj.getGroupOfProperty(pn).replace(' ','')[1:]==prop[5:] and pn != prop:
 					obj.setEditorMode(pn,mode)
 			return
 
@@ -123,11 +123,11 @@ class ViewProvider:
 		for prop in  s.PropertiesList:
 			if s.getTypeIdOfProperty(prop) in ['App::PropertyLink']:
 				v=s.getPropertyByName(prop)
-				if v <>None:
+				if v  is not None:
 					rc += [v]
 			elif s.getTypeIdOfProperty(prop) in ['App::PropertyLinkList']:
 				v=s.getPropertyByName(prop)
-				if len(v) <> 0:
+				if len(v)  !=  0:
 					rc += v
 		return rc
 

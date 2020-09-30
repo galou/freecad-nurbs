@@ -15,12 +15,13 @@ import networkx as nx
 import numpy as np
 import random
 
+from .debug import reload_module
 from nurbswb.say import *
 import nurbswb.pyob
 from nurbswb.pyob import  FeaturePython,ViewProvider
-reload (nurbswb.pyob)
+reload_module (nurbswb.pyob)
 import nurbswb.lib as nl
-reload(nurbswb.lib)
+reload_module(nurbswb.lib)
 
 
 def vkey(vec):
@@ -481,7 +482,7 @@ class Pattern(FeaturePython):
 
 		fp.Shape=Part.makeCompound(col)
 
-		if fp.mapToTarget and fp.target != None:
+		if fp.mapToTarget and fp.target is not None:
 			col2=[]
 			border=Part.makeCompound(col)
 			for c in col:

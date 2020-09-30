@@ -95,13 +95,13 @@ def creategrid(uc=3,vc=5,sk=None):
 		l=les
 		#print l
 		_=sk.addConstraint(Sketcher.Constraint('Coincident',l[0],1,l[2],1)) 
-		if a<>vc:
+		if a != vc:
 			_=sk.addConstraint(Sketcher.Constraint('Coincident',l[0],2,l[0]+1,1)) 
-		if b<>uc:
+		if b != uc:
 			_=sk.addConstraint(Sketcher.Constraint('Coincident',l[2],2,l[2]+1,1)) 
 		if a == vc:
 			_=sk.addConstraint(Sketcher.Constraint('Coincident',l[0],2,l[3],1))
-			if b<> uc:
+			if b !=  uc:
 				_=sk.addConstraint(Sketcher.Constraint('Coincident',l[3],2,l[3]+1,1)) 
 		if b == uc:
 			_=sk.addConstraint(Sketcher.Constraint('Coincident',l[2],2,l[1],1)) 

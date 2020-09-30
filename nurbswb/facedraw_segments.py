@@ -17,10 +17,10 @@ import FreeCAD
 import sys,time
 import random
 
-
+from .debug import reload_module
 
 import nurbswb.isodraw
-reload(nurbswb.isodraw)
+reload_module(nurbswb.isodraw)
 
 
 
@@ -76,25 +76,25 @@ class EventFilter(QtCore.QObject):
 				z == 'PySide.QtCore.QEvent.Type.User'  or \
 				z == 'PySide.QtCore.QEvent.Type.Paint' or \
 				z == 'PySide.QtCore.QEvent.Type.LayoutRequest' or\
-				z == 'PySide.QtCore.QEvent.Type.UpdateRequest'  : 
+				z == 'PySide.QtCore.QEvent.Type.UpdateRequest'  :
 			return QtGui.QWidget.eventFilter(self, o, e)
 
 		if event.type() == QtCore.QEvent.MouseMove:
 				(x,y)=Gui.ActiveDocument.ActiveView.getCursorPos()
 				t=Gui.ActiveDocument.ActiveView.getObjectsInfo((x,y))
-				
+
 				#---------------------
 
 				cursor=QtGui.QCursor()
 				p = cursor.pos()
 				px=p.x()
 				py=p.y()
-				if p.x()<100 or p.y()<100: 
+				if p.x()<100 or p.y()<100:
 					print "jump cursor facedraw 92"
 #					cursor.setPos(p.x()+100, p.y()+100)
 				#-----------------------------------
 
-				if t<>None: # if objects are under the mouse
+				if t is not None: # if objects are under the mouse
 					for tix,tt in enumerate(t):
 						print ("objunder ",tix,tt,tt['Object'],tt['Component'])
 						print  self.fob.Label
@@ -191,10 +191,10 @@ class EventFilter(QtCore.QObject):
 						return True
 					elif e.key() == QtCore.Qt.Key_Up :
 						self.mouseWheel += FreeCAD.ParamGet('User parameter:Plugins/nurbs').GetFloat("MoveCursorStep",10)
-						self.dialog.ef_action("up",self,self.mouseWheel) 
+						self.dialog.ef_action("up",self,self.mouseWheel)
 						return True
 					elif e.key() == QtCore.Qt.Key_Down :
-						self.mouseWheel -= FreeCAD.ParamGet('User parameter:Plugins/nurbs').GetFloat("MoveCursorStep",10) 
+						self.mouseWheel -= FreeCAD.ParamGet('User parameter:Plugins/nurbs').GetFloat("MoveCursorStep",10)
 						self.dialog.ef_action("down",self,self.mouseWheel)
 						return True
 					elif e.key() == QtCore.Qt.Key_PageUp :
@@ -315,7 +315,7 @@ def drawcurve(wire,face,facepos=FreeCAD.Vector()):
 
 	#pts=[p.Point for p in w.Vertexes]
 	pts=[p.Point- wpos for p in w.Vertexes]
-	
+
 	sf=t.Surface
 
 	bs=sf
@@ -360,7 +360,7 @@ def drawcurve(wire,face,facepos=FreeCAD.Vector()):
 	ee.reverse()
 	splitb=[(ee,face)]
 	r2=Part.makeSplitShape(face, splitb)
-	
+
 	if hasattr(wire,"drawFace"):
 
 			sp=App.ActiveDocument.getObject(wire.Label+"_SplineFaceA")
@@ -403,7 +403,7 @@ def _drawring(name,wires,dirs,face,facepos=FreeCAD.Vector()):
 
 		#pts=[p.Point for p in w.Vertexes]
 		pts=[p.Point- wpos for p in w.Vertexes]
-		
+
 		sf=t.Surface
 
 		bs=sf
@@ -453,7 +453,7 @@ def _drawring(name,wires,dirs,face,facepos=FreeCAD.Vector()):
 
 			#pts=[p.Point for p in w.Vertexes]
 			pts=[p.Point- wpos for p in w.Vertexes]
-			
+
 			sf=t.Surface
 
 			bs=sf
@@ -515,8 +515,8 @@ def _drawring(name,wires,dirs,face,facepos=FreeCAD.Vector()):
 					sp=App.ActiveDocument.addObject("Part::Spline",name)
 
 				#if wire.reverseFace: sp.Shape=r2[0][0]
-				#else: 
-				
+				#else:
+
 				sp.Shape=r[0][0]
 
 				#sp.ViewObject.ShapeColor=(random.random(),random.random(),random.random())
@@ -581,7 +581,7 @@ class MyWidget(QtGui.QWidget):
 		''' dummy method'''
 		ef=self.ef
 		print ("val,x,y,k",ef.mouseWheel,ef.posx,ef.posy,ef.key)
-		return 
+		return
 
 	def ef_action(self,*args):
 		''' dummy method'''
@@ -623,7 +623,7 @@ def dialog(source=None):
 
 #	poll=QtGui.QLabel("Selected  Pole:")
 
-#	dial=QtGui.QDial() 
+#	dial=QtGui.QDial()
 #	dial.setMaximum(10)
 #	dial.setNotchesVisible(True)
 #	dial.setValue(FreeCAD.ParamGet('User parameter:Plugins/nurbs').GetInt("Cursor",0))
@@ -633,7 +633,7 @@ def dialog(source=None):
 
 	box = QtGui.QVBoxLayout()
 	w.setLayout(box)
-	
+
 	for ww in [btn,cobtn] :
 		box.addWidget(ww)
 
@@ -687,7 +687,7 @@ def genbuffer(pts,colors=None):
 			else:
 				colix += " "+str(colors[i])
 		pix += str(p.x)+" "+str(p.y) +" " +str(p.z)+"\n"
-		if i>0:cordix +=  str(i-1)+" "+str(i)+" -1\n" 
+		if i>0:cordix +=  str(i-1)+" "+str(i)+" -1\n"
 
 	buff ='''#Inventor V2.1 ascii
 	Separator {
@@ -699,19 +699,19 @@ def genbuffer(pts,colors=None):
 		}
 		Separator {
 			VRMLGroup {
-				children 
+				children
 				VRMLShape {
-					geometry 
+					geometry
 						VRMLIndexedLineSet {
-							coord 
+							coord
 								VRMLCoordinate {
-									point 
+									point
 	'''
 
 	buff += " [" + pix + "]}\n"
 
 	buff +='''
-						color 
+						color
 							VRMLColor {
 								color [ 0 0 0, 1 0 0, 0 1 0,
 										0 0 1, 1 1 0, 0 1 1, 1 0 1 , 1 1 1,
@@ -853,7 +853,7 @@ def stop():
 
 	try:
 		App.ActiveDocument.removeObject(ef.rc[0].Name)
-		App.ActiveDocument.removeObject(ef.rc[1].Name) 
+		App.ActiveDocument.removeObject(ef.rc[1].Name)
 	except:
 		pass
 

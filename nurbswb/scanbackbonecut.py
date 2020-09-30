@@ -19,6 +19,7 @@ import sys,traceback,random,os
 import Points
 import nurbswb
 
+from .debug import reload_module
 
 global __dir__
 __dir__ = os.path.dirname(nurbswb.__file__)
@@ -35,7 +36,7 @@ FreeCADGui.runCommand("Draft_ToggleGrid")
 # @param pl - Placement of the cutting plane
 # @param pts - points of the pointcloud
 # @param showpoints - display the point sets
-# @param showwire - create a wire which approximates the point set 
+# @param showwire - create a wire which approximates the point set
 # @param showxywire - create a wire which approximates the point set as mapping in the xy-plane
 # @param showxypoints - display the mapping of the point sets into the xy-plane
 #
@@ -87,7 +88,7 @@ def displayCut(label,pl,pts,showpoints=True,showwire=False,showxypoints=False,sh
 
 
 	# if no points found - create an empty point set
-	if len(pts2a)==0: 
+	if len(pts2a)==0:
 
 		if showxypoints:
 			Points.show(Points.Points([]))
@@ -141,7 +142,7 @@ def displayCut(label,pl,pts,showpoints=True,showwire=False,showxypoints=False,sh
 	tt=path.swapaxes(0,1)
 	y1 = sp.signal.medfilt(tt[1],f)
 	y0 = sp.signal.medfilt(tt[0],f)
-	l5=[FreeCAD.Vector(p) for p in np.array([y0,y1,tt[2]]).swapaxes(0,1)] 
+	l5=[FreeCAD.Vector(p) for p in np.array([y0,y1,tt[2]]).swapaxes(0,1)]
 
 	if showxywire:
 		Draft.makeWire(l5)
@@ -185,15 +186,15 @@ def displayCut(label,pl,pts,showpoints=True,showwire=False,showxypoints=False,sh
 def run(model='shoeAdam', point_cloud='shoe_last_scanned',showpoints=True,showxywire=True,showxypoints=True):
 	''' create slices of the pointcloud near the ribs '''
 
-	try: 
+	try:
 		FreeCAD.ActiveDocument.getObject(point_cloud)
-	except: 
+	except:
 		Points.insert(__dir__+"/../testdata/"+point_cloud+".asc","Shoe")
 
 
 	# load the shoedata
 	import nurbswb.shoedata
-	reload(nurbswb.shoedata)
+	reload_module(nurbswb.shoedata)
 
 	bbps=nurbswb.shoedata.shoeAdam.bbps
 	boxes=nurbswb.shoedata.shoeAdam.boxes
@@ -203,7 +204,7 @@ def run(model='shoeAdam', point_cloud='shoe_last_scanned',showpoints=True,showxy
 
 	trafos=[]
 	for i,b in enumerate(bbps):
-		# if i<>5 : continue
+		# if i != 5 : continue
 		alpha=twister[i][1]
 		beta=twister[i][2]
 		alpha=0
@@ -217,7 +218,7 @@ def run(model='shoeAdam', point_cloud='shoe_last_scanned',showpoints=True,showxy
 
 	# create the sketches
 	import nurbswb.createsketchspline
-	reload(nurbswb.createsketchspline)
+	reload_module(nurbswb.createsketchspline)
 
 	scp=FreeCAD.ActiveDocument.Scanpoints
 	jj=scp.OutList
@@ -225,7 +226,7 @@ def run(model='shoeAdam', point_cloud='shoe_last_scanned',showpoints=True,showxy
 	clo=FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup","clones2")
 
 	for i,p in enumerate(jj):
-		
+
 		# move the sketches into the ribs folders
 		grp=FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup","GRP "+str(i+1))
 		try:
@@ -236,7 +237,7 @@ def run(model='shoeAdam', point_cloud='shoe_last_scanned',showpoints=True,showxy
 		except:
 			pass
 
-		# place a clone of the ribs into the 3D space 
+		# place a clone of the ribs into the 3D space
 		try:
 			grp.addObject(jj[i])
 			obj=App.ActiveDocument.getObject('rib_'+str(i+1))

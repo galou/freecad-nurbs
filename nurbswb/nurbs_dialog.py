@@ -9,6 +9,7 @@
 
 from say import *
 
+from .debug import reload_module
 
 layout='''
 VerticalLayoutTab:
@@ -276,7 +277,7 @@ class MyApp(object):
 		Gui.ActiveDocument.resetEdit()
 #		self.root.ids['main'].hide()
 		import nurbswb.miki as miki
-		reload(miki)
+		reload_module(miki)
 		mw=miki.getMainWindow()
 		miki.getComboView(mw).removeTab(2)
 		miki.getComboView(mw).setCurrentIndex(0)
@@ -694,7 +695,7 @@ class MyApp(object):
 
 		# wenn nicht rechteckmode setze pole
 		rc=self.root.ids['focusmode'].currentText()
-#		if rc <> 'Rectangle':
+#		if rc  !=  'Rectangle':
 		if  self.root.ids['pole1active'].isChecked():
 				self.setPole1()
 		else:
@@ -846,7 +847,7 @@ class MyApp(object):
 def mydialog(obj):
 
 	import nurbswb.miki as miki
-	reload(miki)
+	reload_module(miki)
 
 	app=MyApp()
 	miki=miki.Miki()

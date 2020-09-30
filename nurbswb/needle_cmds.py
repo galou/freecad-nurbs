@@ -7,9 +7,10 @@ from PySide import QtGui
 import FreeCAD,FreeCADGui
 App=FreeCAD
 
+from .debug import reload_module
 import nurbswb.needle
 import nurbswb.needle_models
-reload(nurbswb.needle_models)
+reload_module(nurbswb.needle_models)
 
 
 def getdata(index):
@@ -45,10 +46,10 @@ def initmodel():
 
 
 def addRib(dialog):
-	# read 
+	# read
 	(curve,bb,scaler,twister)=App.activeDocument().MyNeedle.Proxy.Model()
 
-	# modifications 
+	# modifications
 	i=dialog.pos
 	if i == 0:
 		print "kann keine ripee vroschieben"
@@ -72,7 +73,7 @@ def addRib(dialog):
 
 
 def CaddRib(obj,i):
-	# read 
+	# read
 	(curve,bb,scaler,twister)=obj.Proxy.Model()
 
 	t=(bb[i]+bb[i+1])*0.5
@@ -92,10 +93,10 @@ def CaddRib(obj,i):
 
 
 def addMeridian(dialog):
-	# read 
+	# read
 	(curve,bb,scaler,twister)=App.activeDocument().MyNeedle.Proxy.Model()
 
-	# modifications 
+	# modifications
 	i=dialog.pos
 	t=(curve[i-1]+curve[i])*0.5
 	c=np.concatenate([curve[0:i],[t],curve[i:]])
@@ -184,7 +185,7 @@ def CaddStrongRibEdge(obj,i):
 
 
 
-# sharp and round edge -- strong edge p -> 2p oder p ->git commit - 3p 
+# sharp and round edge -- strong edge p -> 2p oder p ->git commit - 3p
 
 def addStrongRibEdge(dialog):
 	CaddStrongRibEdge(dialog.obj,dialog.pos+1)
@@ -224,14 +225,14 @@ def CaddNeighborMeridians(obj,i):
 
 
 def delMeridian(dialog):
-	# read 
+	# read
 	(curve,bb,scaler,twister)=App.activeDocument().MyNeedle.Proxy.Model()
 
 	if curve.shape[0]<5:
 		print "zu wenig Punkte "
 		return
 
-	# modifications 
+	# modifications
 	i=dialog.pos
 	c=np.concatenate([curve[0:i],curve[i+1:]])
 	curve=c
@@ -243,14 +244,14 @@ def delMeridian(dialog):
 	dialog.close()
 
 def CdelMeridian(obj,i):
-	# read 
+	# read
 	(curve,bb,scaler,twister)=obj.Proxy.Model()
 
 	if curve.shape[0]<5:
 		print "zu wenig Punkte "
 		return
 
-	# modifications 
+	# modifications
 	c=np.concatenate([curve[0:i],curve[i+1:]])
 	curve=c
 
@@ -260,26 +261,26 @@ def CdelMeridian(obj,i):
 	obj.Proxy.showMeridian(i-2)
 
 def CdelRib(obj,i):
-	# read 
+	# read
 	(curve,bb,scaler,twister)=obj.Proxy.Model()
 
 	i = i
-	
+
 	if bb.shape[0]<5:
 		print "zu wenig Punkte "
 		return
 
-	# modifications 
+	# modifications
 	b=np.concatenate([bb[0:i],bb[i+1:]])
 	bb=b
-	
+
 	s=np.concatenate([scaler[0:i],scaler[i+1:]])
 	scaler=s
 
 	t=np.concatenate([twister[0:i],twister[i+1:]])
 	twister=t
-	
-	
+
+
 
 	# write back
 	obj.Proxy.lock=False
@@ -298,7 +299,7 @@ class RibEditor(QtGui.QWidget):
 		print self.obj.Spreadsheet.Label
 		self.initUI()
 
-	def initUI(self):      
+	def initUI(self):
 
 		self.btn = QtGui.QPushButton('Init A Model', self)
 		self.btn.move(20, 20)
@@ -312,11 +313,11 @@ class RibEditor(QtGui.QWidget):
 		self.btn.move(20, 50)
 		f=lambda:delRib(self)
 		self.btn.clicked.connect(f)
-		
+
 		self.btn = QtGui.QPushButton('Add Rib', self)
 		self.btn.move(20, 80)
 		f=lambda:addRib(self)
-		
+
 		self.btn.clicked.connect(f)
 
 
@@ -351,9 +352,9 @@ class RibEditor(QtGui.QWidget):
 
 
 	def showDialog(self):
-		text, ok = QtGui.QInputDialog.getText(self, 'Input Dialog', 
+		text, ok = QtGui.QInputDialog.getText(self, 'Input Dialog',
 			'Enter your name:')
-		
+
 		if ok:
 			self.le.setText(str(text))
 
@@ -368,7 +369,7 @@ class BackboneEditor(QtGui.QWidget):
 		print self.obj.Spreadsheet.Label
 		self.initUI()
 
-	def initUI(self):      
+	def initUI(self):
 
 		self.btn = QtGui.QPushButton('Init Model', self)
 		self.btn.move(20, 20)
@@ -414,9 +415,9 @@ class BackboneEditor(QtGui.QWidget):
 		self.obj.Proxy.dialog=self
 
 	def showDialog(self):
-		text, ok = QtGui.QInputDialog.getText(self, 'Input Dialog', 
+		text, ok = QtGui.QInputDialog.getText(self, 'Input Dialog',
 			'Enter your name:')
-		
+
 		if ok:
 			self.le.setText(str(text))
 

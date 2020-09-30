@@ -87,7 +87,7 @@ class OffsetSpline(nurbswb.pyob.FeaturePython):
 		fa.Shape=bc.toShape()
 		fa.ViewObject.LineColor=(.0,1.0,.0)
 
-		if obj.ofout<>0:
+		if obj.ofout != 0:
 			ofs=App.ActiveDocument.getObject(name+"_offOut")
 			if ofs==None: ofs=App.ActiveDocument.addObject("Part::Offset2D",name+"_offOut")
 			ofs.Source = fa
@@ -95,7 +95,7 @@ class OffsetSpline(nurbswb.pyob.FeaturePython):
 			ofs.Value = obj.ofout
 			ofs.recompute()
 
-		if obj.ofin<>0:
+		if obj.ofin != 0:
 			ofsi=App.ActiveDocument.getObject(name+"_offIn")
 			if ofsi==None: ofsi=App.ActiveDocument.addObject("Part::Offset2D",name+"_offIn")
 			ofsi.Source = fa
@@ -246,7 +246,7 @@ class Star(nurbswb.pyob.FeaturePython):
 
 		relpos=FreeCAD.Placement(obj.relativePosition)
 		
-		if obj.tangentCond <>0 and obj.VertexNumber <> 0:
+		if obj.tangentCond  != 0 and obj.VertexNumber  !=  0:
 			rc=dirs(obj.parent,obj.VertexNumber-1)
 			
 			if obj.tangentCond > len(rc): obj.tangentCond =len(rc)

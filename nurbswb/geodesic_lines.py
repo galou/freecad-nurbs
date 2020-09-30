@@ -26,9 +26,10 @@ import numpy as np
 import time
 from pivy import coin
 
+from .debug import reload_module
 import nurbswb.pyob
 from nurbswb.pyob import  FeaturePython,ViewProvider
-reload (nurbswb.pyob)
+reload_module (nurbswb.pyob)
 
 
 #-------------------------------
@@ -56,7 +57,7 @@ class Geodesic(FeaturePython):
 		obj.addProperty("App::PropertyBool","onchange","", "calculate all 4 directions")
 		obj.addProperty("App::PropertyBool","flipNormals","", "calculate all 4 directions")
 		obj.addProperty("App::PropertyBool","createSweep")
-		
+
 		obj.addProperty("App::PropertyBool","geodesicTorsion")
 		obj.addProperty("App::PropertyEnumeration","mode","Base").mode=["geodesic","curvature","patch","distance"]
 		obj.addProperty("App::PropertyLink","obj","","surface object")
@@ -175,7 +176,7 @@ def createGeodesicA(obj=None):
 	Geodesic(a)
 	a.obj=obj
 	ViewProvider(a.ViewObject)
-	if obj<>None:
+	if obj is not None:
 		a.Label="Geodesic for "+obj.Label
 
 	a.mode="geodesic"
@@ -184,7 +185,7 @@ def createGeodesicA(obj=None):
 	a.lang2=50
 	a.lang3=50
 	a.direction=30
-	
+
 	a.lang2=1
 	a.lang4=1
 	a.lang3=0
@@ -212,17 +213,17 @@ def createPatch(obj=None,wire=None):
 	a.wire=wire
 
 	ViewProvider(a.ViewObject)
-	if obj<>None:
+	if obj is not None:
 		a.Label="Patch for "+obj.Label
 	a.mode="patch"
-	
+
 	#a.reverse=True
 	a.closed=True
 	a.form="facecurve"
 	a.tolerance=1.
 	a.form="bspline3"
 #	a.form="face"
-	
+
 #	hideAllProps(a)
 	return a
 
@@ -259,7 +260,7 @@ def colorPath(pts,color='0 1 0',name=None):
 		'''  points to iv format '''
 		s=''
 		for p in pts:
-			s +=  "{} {} {}, ".format(p.x,p.y,p.z) 
+			s +=  "{} {} {}, ".format(p.x,p.y,p.z)
 		return s
 
 	buf='''
@@ -269,17 +270,17 @@ def colorPath(pts,color='0 1 0',name=None):
 		 Material { diffuseColor %s specularColor 1 1 1 shininess 0.9 }
 #		 Shuttle { translation0 -1 0 -1 translation1 1 0 1 speed 0.3 on TRUE }
 		 Coordinate3 { point [ %s ] }
-		 LineSet { 
+		 LineSet {
 			#numVertices [ 7 ]
 		 }
 	  }
 	'''
 
-	if name <> None:
+	if name  !=  None:
 		iv=App.ActiveDocument.getObject(name)
 		if iv==None:iv=App.ActiveDocument.addObject("App::InventorObject",name)
 		iv.Buffer=buf % ('0 0 0',color,ivPts(pts))
-	else: 
+	else:
 		return buf % ('0 0 0',color,ivPts(pts))
 
 
@@ -340,10 +341,10 @@ def genRibForGeodesic(fp,u,v,d,lang,ribflag,color='0 1 1'):
 
 		if ribflag:
 			try: cps=colorPath(pts,color=color,name=None)
-			except: 
+			except:
 				cps=None
 				shape=None
-		else: 
+		else:
 			cps=None
 			shape=None
 
@@ -378,7 +379,7 @@ def getface_old(count=10):
 			n=t[0].cross(FreeCAD.Vector(0,0,1))
 			polg=Part.makePolygon([p+10000*n,p-10000*n])
 			col2 += [polg]
-			
+
 			ss=bs.makeParallelProjection(polg,FreeCAD.Vector(0,0,1))
 			sps=[v.Point for v in ss.Vertexes]
 			#print sps
@@ -403,7 +404,7 @@ def getface_old(count=10):
 	f=count/track.Length
 	f=1
 	for i,p in enumerate(ptsa):
-		if ptsa[i]<>ptsb[i]:
+		if ptsa[i] != ptsb[i]:
 			pol=Part.makePolygon([ptsa[i],ptsb[i]])
 			comp.append(pol)
 #			print(i, (ptsa[i]-tps[i]).Length,(ptsb[i]-tps[i]).Length)
@@ -440,17 +441,17 @@ def updateGeodesic(fp):
 
 		ak=1
 
-		if fp.pre<>None:
+		if fp.pre is not None:
 			obj=fp.pre.obj
 			d=fp.pre.directionrib
 			d=fp.pre.directione+fp.pre.directionrib
-			
+
 			u=fp.pre.ue
 			v=fp.pre.ve
-			if fp.obj<>obj: fp.obj=obj
-			if fp.u<>u: fp.u=u
-			if fp.v<>v: fp.v=v
-			if fp.direction<>d:	
+			if fp.obj != obj: fp.obj=obj
+			if fp.u != u: fp.u=u
+			if fp.v != v: fp.v=v
+			if fp.direction != d:
 				fp.direction=d
 
 
@@ -513,13 +514,13 @@ def updateGeodesic(fp):
 			if 1 or i % 2 == 0 or i==fp.lang:
 				ribflag= i%5 == 0 and gridon
 				if i==lang3: ribflag=True
-				
+
 #				print ("erzeuge ribbe",i)
 				a=t.dot(t1)
 				b=t.dot(t2)
 				a,b=b,a
 				de=180./np.pi*np.arctan2(b,a)
-				
+
 				if i==lang3 : color='0 1 0'
 				#else: color='0 1 1'
 				else: color='1 1 0'
@@ -539,14 +540,14 @@ def updateGeodesic(fp):
 				nuvs += [(u1,v1)]
 				puvs += [(u2,v2)]
 				uvs2.reverse()
-				if i<>0:
+				if i != 0:
 					#uvsarr += [uvs2[:-1]+uvs1]
 					ttu=uvs2[:-1]+uvs1
 					ttu.reverse()
 					uvsarr += [ttu]
-					
+
 				if ribflag:
-					if i<>0:
+					if i != 0:
 						shapas += r1 + r2
 				if i==0:
 					ribm=r1+r2
@@ -570,10 +571,10 @@ def updateGeodesic(fp):
 			last=sf.value(u,v)
 			p2=last+t*0.1*fp.gridsize
 			(u1,v1)=sf.parameter(p2)
-			
+
 #			print ("pot",i,u,v,t,fp.gridsize,last,p2)
 			(u,v)=(u1,v1)
-			
+
 			if u<umin:u=umin
 			if v<vmin:v=vmin
 			if u>umax:u=umax
@@ -582,7 +583,7 @@ def updateGeodesic(fp):
 
 			if u<umin or v<vmin or u>umax or v>vmax:
 				print "qaBBruch!"
-			
+
 				break
 			p=sf.value(u,v)
 
@@ -590,7 +591,7 @@ def updateGeodesic(fp):
 			(t1,t2)=sf.tangent(u,v)
 			nn=f.normalAt(u,v)
 			t2=t1.cross(nn)
-			
+
 			#t2 *= -1
 
 			t=p-last
@@ -630,13 +631,13 @@ def updateGeodesic(fp):
 			if 1 or i % 2 == 0 or i==lang:
 				ribflag= i%5 == 0 and gridon
 				if i==lang: ribflag=True
-				
+
 #				print ("erzeuge ribbe",i)
 				a=t.dot(t1)
 				b=t.dot(t2)
 				a,b=b,a
 				de=180./np.pi*np.arctan2(b,a)
-				
+
 				if i==lang: color='1 0 0'
 				else: color='1 1 0'
 #				r1,(u1,v1),uvs1 = genRibForGeodesic(fp,u,v,de+90-2*d,lang2,ribflag,color)
@@ -664,14 +665,14 @@ def updateGeodesic(fp):
 			v2=(v-vmin)/(vmax-vmin)
 			pts += [pot]
 			ptsbb += [pot]
-			
+
 			(ct1,ct2)=sf.curvatureDirections(u,v)
 			kmax=sf.curvature(u,v,"Max")
 			kmin=sf.curvature(u,v,"Min")
 			aa1=ct1.dot(t)
 			aa2=ct2.dot(t)
-			
-			if fp.flipNormals:nfa=-1 
+
+			if fp.flipNormals:nfa=-1
 			else: nfa=1
 
 			geto +=[pot,pot +  nfa*sf.normal(u,v)*abs(aa1*aa2*(kmax-kmin))*10*fp.forcesize,
@@ -688,7 +689,7 @@ def updateGeodesic(fp):
 				if i==0:
 					poly=Part.makePolygon([sf.value(u,v)+ rib*(-1)*(lang2+1),
 						sf.value(u,v),sf.value(u,v)+ rib*(1.0)*(lang4+1)])
-					
+
 					if fp.volume:
 						poly=Part.makePolygon([
 							sf.value(u,v)+ rib*(-1)*(lang2+1),
@@ -762,7 +763,7 @@ def updateGeodesic(fp):
 
 		shape=Part.makePolygon(pts)
 		cp1=colorPath(pts,color='1 1 0',name=None)
-		
+
 		ppts=[sf.value(u,v) for (u,v) in puvs]
 		pshape=Part.makePolygon(ppts)
 		cp2=colorPath(ppts[:-1],color='0 0 1',name=None)
@@ -888,17 +889,17 @@ def updatePatch_old(fp):
 		v=fp.v
 		obj=fp.obj
 
-		if fp.pre<>None:
+		if fp.pre is not None:
 			obj=fp.pre.obj
 			d=fp.pre.directionrib
 			d=fp.pre.directione+fp.pre.directionrib
-			
+
 			u=fp.pre.ue
 			v=fp.pre.ve
-			if fp.obj<>obj: fp.obj=obj
-			if fp.u<>u: fp.u=u
-			if fp.v<>v: fp.v=v
-			if fp.direction<>d:	
+			if fp.obj != obj: fp.obj=obj
+			if fp.u != u: fp.u=u
+			if fp.v != v: fp.v=v
+			if fp.direction != d:
 				fp.direction=d
 
 
@@ -933,7 +934,7 @@ def updatePatch_old(fp):
 			if i % 2 == 0 or i==fp.lang:
 				ribflag= i%5 == 0 and gridon
 				if i==fp.lang: ribflag=True
- 
+
 #				print ("erzeuge ribbe",i)
 				a=t.dot(t1)
 				b=t.dot(t2)
@@ -998,11 +999,11 @@ def updatePatch_old(fp):
 
 		shape=Part.makePolygon(pts)
 		cp1=colorPath(pts,color='1 0 0',name=None)
-		
+
 		ppts=[sf.value(u,v) for (u,v) in puvs[1:-1]]
 		pshape=Part.makePolygon(ppts)
 		cp2=colorPath(ppts,color='0 1 0',name=None)
-		
+
 		npts=[sf.value(u,v) for (u,v) in nuvs[1:-1]]
 		nshape=Part.makePolygon(npts)
 		cp3=colorPath(npts,color='0 0 1',name=None)
@@ -1085,7 +1086,7 @@ def updateCurvaturePath(fp,redirect,flip):
 
 #		(t1,t2)=sf.tangent(u,v)
 		tsa=sf.curvatureDirections(u,v)
-		
+
 		if flip: t=tsa[1]
 		else: t=tsa[0]
 		if redirect:
@@ -1099,7 +1100,7 @@ def updateCurvaturePath(fp,redirect,flip):
 			p2=last+t*1
 			(u1,v1)=sf.parameter(p2)
 			(u,v)=(u1,v1)
-			
+
 			if u<umin:u=umin
 			if v<vmin:v=vmin
 			if u>umax:u=umax
@@ -1109,7 +1110,7 @@ def updateCurvaturePath(fp,redirect,flip):
 				print "qaBBruch!"
 				break
 			p=sf.value(u,v)
-			
+
 			pts += [ p]
 			# (t1,t2)=sf.tangent(u,v)
 			(t1,t2)=sf.curvatureDirections(u,v)
@@ -1127,7 +1128,7 @@ def updateCurvaturePath(fp,redirect,flip):
 
 			if abs(dt1)>abs(dt2):
 				t=t1
-			else: 
+			else:
 				t=t2
 
 			if (p-last).Length>(p+t-last).Length:
@@ -1245,15 +1246,15 @@ def updatePatch(fp):
 	l=bb.XMax
 	l2=max(abs(bb.YMax),abs(bb.YMin))
 	print (l,l2,l3)
-	
+
 	needupd=False
 	if gd.lang<l: gd.lang=int(round(l))+1;needupd=True
-	if gd.lang2<l2:	
+	if gd.lang2<l2:
 		gd.lang2=int(round(l2))+1;needupd=True
 		gd.lang4=int(round(l2))+1;needupd=True
-	
+
 	if gd.lang3<l3:	gd.lang3=int(round(l3))+1;needupd=True
-	
+
 	if needupd:
 		gd.Proxy.execute(gd.obj)
 
@@ -1261,8 +1262,8 @@ def updatePatch(fp):
 	# erster fall nur ein wire #+#
 	try: ws= fp.wire.Shape.Wires
 	except: ws=None
-	
-	if ws <> None: ws2=ws
+
+	if ws  !=  None: ws2=ws
 	else: ws2=[fp.wire.Shape]
 
 	print ws
@@ -1277,7 +1278,7 @@ def updatePatch(fp):
 
 		uvs=[]
 		ul,vl=(-10000,-10000)
-		
+
 
 
 		for p in pts:
@@ -1295,7 +1296,7 @@ def updatePatch(fp):
 			if v>=vdim: v=vdim-1
 
 
-			if (u,v) <>(ul,vl):
+			if (u,v)  != (ul,vl):
 				uvs += [(u,v)]
 				ul,vl=u,v
 
@@ -1306,7 +1307,7 @@ def updatePatch(fp):
 		pts=[]
 		print usvarr.shape
 		print "A"
-		
+
 		for up,vp in uvs:
 			print (up,vp)
 			(u,v)=usvarr[up,vp]
@@ -1378,7 +1379,7 @@ def updatePatch(fp):
 
 		if fp.form=='polygon':
 			shape=Part.makePolygon(pts)
-			if ws <> None: ress += [shape]
+			if ws  !=  None: ress += [shape]
 			else:
 				return shape
 
@@ -1386,7 +1387,7 @@ def updatePatch(fp):
 			bc=Part.BSplineCurve()
 			bc.approximate(pts,DegMin=1,DegMax=1,Tolerance=fp.tolerance)
 			#if fp.closed: bc.setPeriodic()
-			if ws <> None: ress += [bc.toShape()]
+			if ws  !=  None: ress += [bc.toShape()]
 			else:
 				return bc.toShape()
 
@@ -1394,7 +1395,7 @@ def updatePatch(fp):
 			bc=Part.BSplineCurve()
 			bc.approximate(pts,DegMax=3,Tolerance=fp.tolerance)
 			#if fp.closed: bc.setPeriodic()
-			if ws <> None: ress += [bc.toShape()]
+			if ws  !=  None: ress += [bc.toShape()]
 			else:
 				return bc.toShape()
 
@@ -1405,7 +1406,7 @@ def updatePatch(fp):
 
 '''
 def approx_step():
-	
+
 
 	a=App.ActiveDocument.Geodesic
 
@@ -1433,7 +1434,7 @@ def approx_step():
 			better=False
 
 	if better: return better
-	
+
 	better=True
 
 	ds=a.dist
@@ -1464,7 +1465,7 @@ def approx_step():
 
 
 def approx_geodesic(n=10):
-	for i in range(n): 
+	for i in range(n):
 		print "------------step ",i
 		rc=approx_step()
 		print "----------result ",rc
@@ -1547,7 +1548,7 @@ def genRibForUpdateDistance(f,u=50,v=50,d=0,lang=30,gridsize=20):
 			(t1,t2)=sf.tangent(u,v)
 
 			ta=p-last
-			try: 
+			try:
 				ta.normalize()
 				t=ta
 			except:
@@ -1613,7 +1614,7 @@ def genrib_outdated(f,u=50,v=50,d=0,lang=30,gridsize=20):
 			(t1,t2)=sf.tangent(u,v)
 
 			ta=p-last
-			try: 
+			try:
 				ta.normalize()
 				t=ta
 			except:
@@ -1694,7 +1695,7 @@ def updateDistance(fp):
 
 	cp =''
 	if fp.flipNormals: nf=-1
-	else: nf=1  
+	else: nf=1
 	for i in range(1,lang+1):
 		if i %5 == 0:
 			pts=[FreeCAD.Vector(tuple(p))  for p in rstar[i]]
@@ -1703,7 +1704,7 @@ def updateDistance(fp):
 			for j in range(len(pts))+[0]:
 				#pps += [ rstar[i,j],rstar[i,j]-dists[j,i]*1*rstarnorms[i,j],rstar[i,j]]
 				pps += [ rstar[i,j] ]
-				
+
 				if dists[j,i]>0:
 					cp += colorPath([
 						FreeCAD.Vector(rstar[i,j]),
@@ -1782,10 +1783,10 @@ def geodesicDistance():
 	a.flipNormals=True
 
 	ViewProvider(a.ViewObject)
-	if obj<>None:
+	if obj is not None:
 		a.Label="Distance for "+obj.Label
 	a.mode="distance"
-	
+
 	return a
 
 #-------------------------------
@@ -1797,9 +1798,9 @@ if FreeCAD.GuiUp:
 	gui = True
 
 class MyDraftLabel:
-	
+
 	"The Draft Label object"
-	
+
 	def __init__(self,obj):
 		obj.Proxy = self
 		obj.addProperty("App::PropertyPlacement","Placement","Base",QT_TRANSLATE_NOOP("App::Property","The placement of this object"))
@@ -1878,7 +1879,7 @@ class MyDraftLabel:
 
 		try: _=obj.obj.Shape
 		except: return
-		
+
 		try:
 			f=obj.obj.Shape.Faces[obj.facenumber]
 			sf=f.Surface
@@ -1945,7 +1946,7 @@ class MyViewProviderDraftLabel:
 
 	def getIcon(self):
 		import Draft_rc
-#		try: 
+#		try:
 #			if self.upd: return ":/icons/DraftWorkbench.svg"
 #1		except: pass
 		return ":/icons/Draft_Label.svg"
@@ -2190,7 +2191,7 @@ def createMarker(u=20,v=50):
 
 def findGeodesicToTarget(start=None,target=None,d=10):
 
-	print 
+	print
 	print "step"
 
 	if start==None:
@@ -2212,7 +2213,7 @@ def findGeodesicToTarget(start=None,target=None,d=10):
 	print "Start:",start.TargetPoint
 	print "Ziel:",target.TargetPoint
 	print ("----------",u,v)
- 
+
 	lang=30
 	minl=10**10
 
@@ -2220,7 +2221,7 @@ def findGeodesicToTarget(start=None,target=None,d=10):
 		for i in range(anz):
 			if i==0: minp=[lang,d]
 			print ("------------",i,minp, minl)
-			print 
+			print
 			ta=time.time()
 			found=False
 			faktor=fak
@@ -2246,7 +2247,7 @@ def findGeodesicToTarget(start=None,target=None,d=10):
 			Gui.updateGui()
 			dti=time.time()-ta
 			print ("Loop time ",dti,len(pts),dti/len(pts))
-			if not found: 
+			if not found:
 				print "nichts mehr gefunden"
 				break
 
@@ -2297,7 +2298,7 @@ def findGeodesicToTarget(start=None,target=None,d=10):
 	a.vt=target.v
 	a.u=start.u
 	a.v=start.v
-	
+
 
 
 
@@ -2310,7 +2311,7 @@ def createShoeMarkers():
 	'A2',4,76,
 	'A',4,50.5,
 	'A1',4,26,
-	
+
 	'J',20,50.4,
 	'J1',22,26,
 	'J2',20,76,
@@ -2337,8 +2338,8 @@ def createShoeMarkers():
 	'KF2', 70.,70.,
 	'KF1', 70.,30.,
 
-	
-	
+
+
 	]
 	da=3
 	db=len(markers)/da

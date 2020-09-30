@@ -15,7 +15,7 @@ def showdialog(title="Fehler",text="Schau in den ReportView fuer mehr Details",d
 	msg.setIcon(QtGui.QMessageBox.Warning)
 	msg.setText(text)
 	msg.setWindowTitle(title)
-	if detail<>None:   msg.setDetailedText(detail)
+	if detail is not None:   msg.setDetailedText(detail)
 	msg.exec_()
 
 

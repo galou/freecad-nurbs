@@ -327,7 +327,7 @@ def npa2ssa(arr,spreadsheet,c1,r1,color=None):
 		for r in range(r1,r2):
 			cn=cellname(c1,r)
 			ss.set(cn,str(arr[r-r1]))
-			if color<>None: ss.setBackground(cn,color)
+			if color is not None: ss.setBackground(cn,color)
 	else:
 		for r in range(r1,r2):
 			for c in range(c1,c2):
@@ -335,7 +335,7 @@ def npa2ssa(arr,spreadsheet,c1,r1,color=None):
 				#print (cn,c,r,arr[r-r1,c-c1])
 				ss.set(cn,str(arr[r-r1,c-c1]))
 				#print ("!!",cn,c,r,arr[r-r1,c-c1],ss.get(cn))
-				if color<>None: ss.setBackground(cn,color)
+				if color is not None: ss.setBackground(cn,color)
 
 
 

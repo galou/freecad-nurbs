@@ -254,12 +254,12 @@ class Tripod(PartFeature):
 		cmax=sf.curvature(u,v,"Max")
 		cmin=sf.curvature(u,v,"Min")
 
-		if cmax <>0:
+		if cmax  != 0:
 			rmax=1.0/cmax
 		else:
 			rmax=0 
 
-		if cmin <>0:
+		if cmin  != 0:
 			rmin=1.0/cmin
 		else:
 			rmin=0

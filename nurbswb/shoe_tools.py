@@ -16,7 +16,7 @@ from say import *
 
 def toggleShoeSketch():
 	'''toggle all position constraints of a gui selected shoe rib'''
-	if len( Gui.Selection.getSelection())<>0:
+	if len( Gui.Selection.getSelection()) != 0:
 		sk=Gui.Selection.getSelection()[0]
 	print "toggle sketch constraints for " + sk.Label
 	for i,c in enumerate(sk.Constraints):

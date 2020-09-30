@@ -1,20 +1,21 @@
-import FreeCAD 
+import FreeCAD
 import FreeCADGui
 
 import numpy as np
 
+from .debug import reload_module
 
 def srun(w):
 	print w.m.currentIndex()
 	a=w.target
 	model='modelS'
 	import nurbswb.sole_models
-	reload(nurbswb.sole_models)
+	reload_module(nurbswb.sole_models)
 	lm=nurbswb.sole_models.listModels(silent=True)
 	print lm[w.m.currentIndex()]
 	model=lm[w.m.currentIndex()][0]
 
-	reload(nurbswb.sole)
+	reload_module(nurbswb.sole)
 	cmd="nurbswb.sole.runA(model=nurbswb.sole_models." + model +"())"
 	print (cmd)
 	eval(cmd)
@@ -25,7 +26,7 @@ from PySide import QtGui, QtCore
 def MyDialog(target=None):
 
 	import nurbswb.sole_models
-	reload(nurbswb.sole_models)
+	reload_module(nurbswb.sole_models)
 	lm=nurbswb.sole_models.listModels()
 
 	w=QtGui.QWidget()
@@ -42,13 +43,13 @@ def MyDialog(target=None):
 
 
 	combo = QtGui.QComboBox()
-	
+
 	for item in lm:
 		combo.addItem(str(item))
-	
+
 
 	w.m=combo
-	combo.activated.connect(lambda:srun(w))  
+	combo.activated.connect(lambda:srun(w))
 
 	box.addWidget(combo)
 

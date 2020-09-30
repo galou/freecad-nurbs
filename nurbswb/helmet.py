@@ -18,9 +18,10 @@ Gui = FreeCADGui
 import numpy as np
 import time
 
+from .debug import reload_module
 import nurbswb.pyob
 from nurbswb.pyob import  FeaturePython,ViewProvider
-reload (nurbswb.pyob)
+reload_module (nurbswb.pyob)
 
 
 
@@ -46,7 +47,7 @@ class _VPH(ViewProvider):
 		obj.ViewObject.show()
 		run(obj)
 		self.methodA(None)
-		
+
 
 	def methodA(self,obj):
 		print "my Method A"
@@ -72,7 +73,7 @@ class _VPH(ViewProvider):
 	def doubleClicked(self,vobj):
 		print "double clicked"
 		self.myedit(vobj.Object)
-		
+
 		print "Ende double clicked"
 
 #-------------------------------
@@ -113,7 +114,7 @@ class Helmet(FeaturePython):
 #			obj.equator=App.ActiveDocument.Sketch
 #			obj.meridian=App.ActiveDocument.Sketch001
 #		except:
-			
+
 #			print "keine Hilfskurven verfuegbar"
 
 
@@ -140,7 +141,7 @@ class Helmet(FeaturePython):
 
 		if prop in ["sketch","height","border"]:
 			try:  run(fp)
-			except: 
+			except:
 				sayexc("fhelre run")
 #		run(fp)
 
@@ -184,9 +185,9 @@ def createSketch(sk):
 		sk.addGeometry(Part.LineSegment(pts[i],pts[i+1]),False)
 
 	for i in range(15):
-		sk.addConstraint(Sketcher.Constraint('Coincident',i,2,i+1,1)) 
+		sk.addConstraint(Sketcher.Constraint('Coincident',i,2,i+1,1))
 
-	sk.addConstraint(Sketcher.Constraint('Coincident',15,2,0,1)) 
+	sk.addConstraint(Sketcher.Constraint('Coincident',15,2,0,1))
 
 	# innenring
 
@@ -199,23 +200,23 @@ def createSketch(sk):
 
 	for i in range(3):
 		print "aa",i
-		sk.addConstraint(Sketcher.Constraint('Coincident',16+i,2,16+i+1,1)) 
+		sk.addConstraint(Sketcher.Constraint('Coincident',16+i,2,16+i+1,1))
 
-	sk.addConstraint(Sketcher.Constraint('Coincident',19,2,16,1)) 
+	sk.addConstraint(Sketcher.Constraint('Coincident',19,2,16,1))
 
-	# parallele gruppen 
+	# parallele gruppen
 
-	sk.addConstraint(Sketcher.Constraint('Parallel',0,15)) 
+	sk.addConstraint(Sketcher.Constraint('Parallel',0,15))
 	for i in range(7):
-		sk.addConstraint(Sketcher.Constraint('Parallel',2*i+1,2*i+2)) 
+		sk.addConstraint(Sketcher.Constraint('Parallel',2*i+1,2*i+2))
 
 	for i in [0,7,16,18]:
 		print i
-		sk.addConstraint(Sketcher.Constraint('Vertical',i)) 
+		sk.addConstraint(Sketcher.Constraint('Vertical',i))
 
 	for i in [3,11,17,19]:
-		sk.addConstraint(Sketcher.Constraint('Horizontal',i)) 
-	
+		sk.addConstraint(Sketcher.Constraint('Horizontal',i))
+
 	for i,c in enumerate(sk.Constraints):
 		sk.setVirtualSpace(i, True)
 
@@ -229,7 +230,7 @@ def createHelperSketch(role):
 	for i in range(4):
 		sk.addGeometry(Part.LineSegment(App.Vector(i*100,0,0),App.Vector((i+1)*100.,0,0)))
 	for i in range(3):
-		sk.addConstraint(Sketcher.Constraint('Coincident',i,2,i+1,1)) 
+		sk.addConstraint(Sketcher.Constraint('Coincident',i,2,i+1,1))
 	sk.movePoint(1,2,FreeCAD.Vector(200,100))
 	return sk
 
@@ -252,7 +253,7 @@ def createHelmet(obj=None):
 	_VPH(a.ViewObject,'freecad-nurbs/icons/createHelmet.svg')
 	# a.ViewObject.Transparency=60
 	a.ViewObject.ShapeColor=(0.3,0.6,0.3)
-	if obj<>None:
+	if obj is not None:
 		a.Label="Helmet for "+obj.Label
 
 
@@ -284,7 +285,7 @@ def run(fp):
 	ptsall[1:4,1,1]=pts2[3].y
 	ptsall[3,1:4,0]=pts2[3].x
 	ptsall[1,1:4,0]=pts2[1].x
-	
+
 	print "arquator"
 	pa=fp.equator.getPoint(1,1)
 	pb=fp.equator.getPoint(2,2)
@@ -296,8 +297,8 @@ def run(fp):
 	print "meridan"
 	pa=fp.meridian.getPoint(1,1)
 	pb=fp.meridian.getPoint(2,2)
-	
-	
+
+
 	ptsall[1:4,3,1]=pa.x
 	ptsall[1:4,1,1]=pb.x
 
@@ -361,15 +362,15 @@ def run(fp):
 	print "!!",Gui.ActiveDocument.getInEdit(),"!!"
 
 	vp=Gui.ActiveDocument.getInEdit()
-	if vp != None and vp.Object==fp:
+	if vp is not None and vp.Object==fp:
 		yy2 +=fp.offset
 
-#	af.buildFromPolesMultsKnots(yy2, 
+#	af.buildFromPolesMultsKnots(yy2,
 #		[4,1,1,1,4],[4,1,1,1,4],
 #		[0,1,2,3,4],[0,1,2,3,4],
 #		False,False,3,3)
 
-	af.buildFromPolesMultsKnots(yy2, 
+	af.buildFromPolesMultsKnots(yy2,
 		[4,3,4],[4,3,4],
 		[0,1,2,],[0,1,2,],
 		False,False,3,3)
@@ -385,10 +386,10 @@ def run(fp):
 
 	yy3=yy2.swapaxes(0,1)
 
-	for yy in [yy2,yy3]:	
+	for yy in [yy2,yy3]:
 		for r in [0,3,6]:
 			bc=Part.BSplineCurve()
-			bc.buildFromPolesMultsKnots(yy[r], 
+			bc.buildFromPolesMultsKnots(yy[r],
 				[4,1,1,1,4],
 				[0,1,2,3,4],
 				False,3)
@@ -397,10 +398,10 @@ def run(fp):
 #	print "ptse23,",ptse2
 
 	if 0:
-		for yy in [yy2a,yy3a]:	
+		for yy in [yy2a,yy3a]:
 			for r in [0,6]:
 				bc=Part.BSplineCurve()
-				bc.buildFromPolesMultsKnots(yy[r], 
+				bc.buildFromPolesMultsKnots(yy[r],
 					[4,1,1,1,4],
 					[0,1,2,3,4],
 					False,3)
@@ -408,7 +409,7 @@ def run(fp):
 
 	for yy in [ptse2,ptsf2]:
 			bc=Part.BSplineCurve()
-			bc.buildFromPolesMultsKnots(yy, 
+			bc.buildFromPolesMultsKnots(yy,
 				[4,1,1,1,4],
 				[0,1,2,3,4],
 				False,3)
@@ -502,8 +503,8 @@ def createTriangle():
 	sk=App.ActiveDocument.addObject('Part::Spline','adapter')
 	sk.Shape=bs.toShape()
 
-	if 0:	
-		comps=[]	
+	if 0:
+		comps=[]
 		bsa=bs.copy()
 		bsa.segment(0,1,0,1)
 		comps +=[bsa.toShape()]

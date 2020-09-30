@@ -22,9 +22,11 @@ import random
 
 import os, nurbswb
 
+from .debug import reload_module
+
 global __dir__
 __dir__ = os.path.dirname(nurbswb.__file__)
-print __dir__
+print(__dir__)
 
 
 class PartFeature:
@@ -122,7 +124,7 @@ def createShape(obj,force=False):
 
 	pts2=pts2.swapaxes(0,1)
 
-	if 0 or obj.nordSeam<>None or  obj.southSeam<>None:
+	if 0 or obj.nordSeam is not None or  obj.southSeam != None:
 		#----------- nord und sued
 
 		pts=pts2.copy()
@@ -254,7 +256,7 @@ def createShape(obj,force=False):
 			t.ViewObject.LineWidth=10
 			t.Label="Tangent right " + str(i+1)
 	else:
-		if obj.tangentsleft <> []:
+		if obj.tangentsleft  !=  []:
 			print "setze tvektoren neu"
 			for i in range(cu):
 				obj.tangentsleft[i].Start=FreeCAD.Vector(pts[0,i])
@@ -292,7 +294,7 @@ class TangentFace(PartFeature):
 		obj.addProperty("App::PropertyBool","flipNorthB","Base")
 		obj.addProperty("App::PropertyBool","flipSouthB","Base")
 		obj.addProperty("App::PropertyBool","swap","Base")
-		
+
 		obj.addProperty("App::PropertyLinkList","tangentsleft","Base")
 		obj.addProperty("App::PropertyFloat","tangentFactor","Base").tangentFactor=1.0
 
@@ -303,7 +305,7 @@ class TangentFace(PartFeature):
 	def xexecute(proxy,obj):
 #		print("execute ")
 #		if obj.noExecute: return
-		try: 
+		try:
 			if proxy.lock: return
 		except:
 			print("except proxy lock")
@@ -337,7 +339,7 @@ class Seam(PartFeature):
 		obj.addProperty("App::PropertyBool","fillCorner","Base")
 		obj.addProperty("App::PropertyBool","linear","Base")
 		obj.addProperty("App::PropertyBool","reversecut","Base")
-		
+
 #		obj.addProperty("App::PropertyInteger","tCount","Base").tCount=30
 #		obj.addProperty("App::PropertyInteger","index","Base").index=0
 #		obj.addProperty("App::PropertyVector","V","Base").V.z=1
@@ -360,7 +362,7 @@ class Seam(PartFeature):
 
 	def execute(proxy,obj):
 
-		if obj.source<>None:
+		if obj.source is not None:
 			print("execute ")
 			try:
 				sf=obj.source.Shape.Face1.Surface
@@ -487,7 +489,7 @@ class Seam(PartFeature):
 				if obj.displayShape=="Tangent2":
 					bs=bs.vIso(bs.getVKnots()[-1])
 
-			if obj.endPlane != None:
+			if obj.endPlane is not None:
 
 				shape=bs.toShape()
 				pl=obj.endPlane
@@ -527,8 +529,8 @@ if __name__=='__main__':
 	dv=3
 
 	pts=np.zeros(cu*cv*3).reshape(cu,cv,3)
-	for u in range(cu): pts[u,:,0]=10*u 
-	for v in range(cv): pts[:,v,1]=10*v 
+	for u in range(cu): pts[u,:,0]=10*u
+	for v in range(cv): pts[:,v,1]=10*v
 
 	pts[4,4,2]=40
 	pts[1,2,2]=-80
@@ -562,7 +564,7 @@ if __name__=='__main__':
 
 	pts=np.zeros(cu*cv*3).reshape(cu,cv,3)
 	for u in range(cu): pts[u,:,0]=10*u +50
-	for v in range(cv): pts[:,v,1]=10*v 
+	for v in range(cv): pts[:,v,1]=10*v
 	bs.buildFromPolesMultsKnots(pts,mv,mu,kvs,kus,
 				False,False,
 				dv,du,
@@ -578,7 +580,7 @@ if __name__=='__main__':
 	except: fa3=App.ActiveDocument.addObject('Part::Spline','targetN')
 
 	pts=np.zeros(cu*cv*3).reshape(cu,cv,3)
-	for u in range(cu): pts[u,:,0]=10*u 
+	for u in range(cu): pts[u,:,0]=10*u
 	for v in range(cv): pts[:,v,1]=10*v +50
 	bs.buildFromPolesMultsKnots(pts,mv,mu,kvs,kus,
 				False,False,
@@ -593,7 +595,7 @@ if __name__=='__main__':
 	except: fa4=App.ActiveDocument.addObject('Part::Spline','targetW')
 	pts=np.zeros(cu*cv*3).reshape(cu,cv,3)
 	for u in range(cu): pts[u,:,0]=10*u -50
-	for v in range(cv): pts[:,v,1]=10*v 
+	for v in range(cv): pts[:,v,1]=10*v
 	bs.buildFromPolesMultsKnots(pts,mv,mu,kvs,kus,
 				False,False,
 				dv,du,
@@ -648,7 +650,7 @@ if __name__ == '__main__':
 	Seam(sseam)
 
 
-	# seams aus streifen berechnen 
+	# seams aus streifen berechnen
 	poles=ke.Shape.Face1.Surface.getPoles()
 	for i,p in enumerate(poles[0]):
 		v=poles[0][i]-poles[1][i]
@@ -748,7 +750,7 @@ if __name__ == '__main__':
 def runseam():
 
 	source=None
-	if len( Gui.Selection.getSelection())<>0:
+	if len( Gui.Selection.getSelection()) != 0:
 		source=Gui.Selection.getSelection()[0]
 	s=FreeCAD.activeDocument().addObject("Part::FeaturePython","SeamW")
 	Seam(s)
@@ -761,7 +763,7 @@ def runseam():
 def runtangentsurface():
 
 	source=None
-	if len( Gui.Selection.getSelection())<>0:
+	if len( Gui.Selection.getSelection()) != 0:
 		source=Gui.Selection.getSelection()[0]
 	b=FreeCAD.activeDocument().addObject("Part::FeaturePython","MyTangentialFace")
 	TangentFace(b)
@@ -815,7 +817,7 @@ def machFlaeche(psta,ku=None,closed=False,bs=None,swap=False):
 			ku=[1.0/(NbUPoles+1)*i for i in range(NbUPoles+1)]
 			mu=[1]*(NbUPoles+1)
 
-		
+
 		if bs == None:
 			pass
 		else:
@@ -833,7 +835,7 @@ def machFlaeche(psta,ku=None,closed=False,bs=None,swap=False):
 				wew= bs.getWeights()[0:4]
 
 		bs2=Part.BSplineSurface()
-		if wew != None:
+		if wew is not None:
 			bs2.buildFromPolesMultsKnots(ps, mv, mu, kv, ku,  False,closed ,vdegree,degree,wew)
 		else:
 			bs2.buildFromPolesMultsKnots(ps, mv, mu, kv, ku,  False,closed ,vdegree,degree)
@@ -849,12 +851,12 @@ print "temp module"
 
 def createShapeV2(obj):
 	if not obj.swap:
-		if obj.westSeam<>None and obj.eastSeam <> None:
+		if obj.westSeam is not None and obj.eastSeam  !=  None:
 			print obj.westSeam.Label
 			sfw=obj.westSeam.Shape.Face1.Surface
 			print sfw.NbVPoles
 			print sfw.NbUPoles
-			
+
 			ptsw=sfw.getPoles()
 
 
@@ -863,14 +865,14 @@ def createShapeV2(obj):
 			print sfe.NbVPoles
 			print sfe.NbUPoles
 			ptse=sfe.getPoles()
-			
+
 			if obj.flipWest:
 				ptsw=np.flipud(ptsw)
 			if obj.flipEast:
 				ptse=np.flipud(ptse)
 
 			poles=np.concatenate([ptsw,ptse])
-			
+
 			closed=sfw.isUClosed()
 #			closed=True
 			print "-------------------------"
@@ -878,7 +880,7 @@ def createShapeV2(obj):
 			obj.Shape=bs.toShape()
 
 	else:
-		if obj.nordSeam<>None and obj.southSeam <> None:
+		if obj.nordSeam is not None and obj.southSeam  !=  None:
 			sfw=obj.nordSeam.Shape.Face1.Surface
 			print sfw.NbVPoles
 			print sfw.NbUPoles
@@ -890,7 +892,7 @@ def createShapeV2(obj):
 			print sfe.NbVPoles
 			print sfe.NbUPoles
 			ptse=sfe.getPoles()
-			
+
 			if obj.flipNorth:
 				ptsw=np.flipud(ptsw)
 			if obj.flipSouth:
@@ -916,7 +918,7 @@ def createShapeV2(obj):
 	print obj.westSeam
 	print obj.eastSeam
 	import nurbswb.temp as ttt
-	reload (nurbswb.temp)
+	reload_module (nurbswb.temp)
 	nurbswb.temp.run(obj)
 '''
 

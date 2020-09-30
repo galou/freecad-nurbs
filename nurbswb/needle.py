@@ -17,6 +17,9 @@ import Part,Mesh,Draft
 
 import numpy as np
 
+from .debug import reload_module
+
+
 def Myarray2NurbsD3(arr,label="MyWall",degree=3,obj=None):
 
 	cylinder=True
@@ -26,12 +29,12 @@ def Myarray2NurbsD3(arr,label="MyWall",degree=3,obj=None):
 
 	#degree=3
 	#degree=1
-	
+
 	udegree=degree
 	vdegree=degree
-	
+
 	if degree == 1: cylinder = False
-	
+
 	ps=[[FreeCAD.Vector(pst[v,u,0],pst[v,u,1],pst[v,u,2]) for u in range(NbUPoles)] for v in range(NbVPoles)]
 
 	kv=[1.0/(NbVPoles-3)*i for i in range(NbVPoles-2)]
@@ -52,7 +55,7 @@ def Myarray2NurbsD3(arr,label="MyWall",degree=3,obj=None):
 		ku=[1.0/(NbUPoles-1)*i for i in range(NbUPoles)]
 		mu=[2]+[1]*(NbUPoles-2)+[2]
 
-		# bug 
+		# bug
 		ku=[1.0/(NbUPoles)*i for i in range(NbUPoles+1)]
 		mu=[1]*(NbUPoles+1)
 		print len(ps)
@@ -117,8 +120,8 @@ def toUVMesh(bs, uf=5, vf=5):
 		uc=uf*bs.NbUPoles
 		vc=vf*bs.NbVPoles
 		ss=[]
-		for x in range(uc+1): 
-			for y in range(vc+1): 
+		for x in range(uc+1):
+			for y in range(vc+1):
 				ss.append(bs.value(1.0/uc*x,1.0/vc*y))
 
 		mm=np.array(ss)[:,2].max()
@@ -128,10 +131,10 @@ def toUVMesh(bs, uf=5, vf=5):
 
 		topfaces=[]
 		x=0
-		for y in range(vc): 
+		for y in range(vc):
 			topfaces.append(((vc+1)*x+y,(vc+1)*x+y+1,len(ss)-2))
 		x=uc
-		for y in range(vc): 
+		for y in range(vc):
 			topfaces.append(((vc+1)*x+y,(vc+1)*x+y+1,len(ss)-1))
 
 #		t=Mesh.Mesh((ss,topfaces))
@@ -141,9 +144,9 @@ def toUVMesh(bs, uf=5, vf=5):
 
 
 		faces=[]
-		for x in range(uc): 
-			for y in range(vc): 
-				#if max((vc+1)*x+y,(vc+1)*x+y+1,(vc+1)*(x+1)+y,(vc+1)*x+y+1,(vc+1)*(x+1)+y+1,(vc+1)*(x+1)+y)<50000: 
+		for x in range(uc):
+			for y in range(vc):
+				#if max((vc+1)*x+y,(vc+1)*x+y+1,(vc+1)*(x+1)+y,(vc+1)*x+y+1,(vc+1)*(x+1)+y+1,(vc+1)*(x+1)+y)<50000:
 				#if len(faces)<100000:
 					faces.append(((vc+1)*x+y,(vc+1)*x+y+1,(vc+1)*(x+1)+y))
 					faces.append(((vc+1)*x+y+1,(vc+1)*(x+1)+y+1,(vc+1)*(x+1)+y))
@@ -266,19 +269,19 @@ def npa2ssa(arr,spreadsheet,c1,r1,color=None):
 		for r in range(r1,r2):
 			cn=cellname(c1,r)
 			ss.set(cn,str(arr[r-r1]))
-			if color<>None: ss.setBackground(cn,color)
+			if color is not None: ss.setBackground(cn,color)
 	else:
 		for r in range(r1,r2):
 			for c in range(c1,c2):
 				cn=cellname(c,r)
 	#			print (cn,c,r,)
 				ss.set(cn,str(arr[r-r1,c-c1]))
-				if color<>None: ss.setBackground(cn,color)
+				if color is not None: ss.setBackground(cn,color)
 
 def gendata(ss):
 	print ("gendata",ss.Label)
 
-	# Form der Nadel als Parameter 
+	# Form der Nadel als Parameter
 
 	# profil blatt
 	curve=[[0,0,0],[5,-5,10],[30,-10,-0],[20,-5,-10],[0,10,0],[-20,-5,-0],[-30,-10,0],[-5,-5,0]]
@@ -446,7 +449,7 @@ class Needle(PartFeature):
 
 		obj.addProperty("App::PropertyInteger","startSegment","Segment").startSegment=0
 		obj.addProperty("App::PropertyInteger","endSegment","Segment").endSegment=-1
-		
+
 		obj.addProperty("App::PropertyBool","makeSolid" ,"Base").makeSolid=True
 
 		# obj.ViewObject.LineColor=(1.0,0.0,1.0)
@@ -464,7 +467,7 @@ class Needle(PartFeature):
 
 
 	def onChanged(self, fp, prop):
-		
+
 		if prop == 'useSpreadsheet':
 			if fp.useSpreadsheet:
 				if fp.Spreadsheet == None:
@@ -478,7 +481,7 @@ class Needle(PartFeature):
 	def execute(proxy,obj):
 #		print("execute ")
 		if obj.noExecute: return
-		try: 
+		try:
 			if proxy.lock: return
 		except:
 			print("except proxy lock")
@@ -492,7 +495,7 @@ class Needle(PartFeature):
 		ss=obj.Spreadsheet
 
 
-		if obj.ribtemplateSource <> None and not obj.externSourcesOff:
+		if obj.ribtemplateSource  !=  None and not obj.externSourcesOff:
 			cs=obj.ribtemplateSource.Shape.Edge1.Curve
 			curve=cs.getPoles()
 			cl=len(curve)
@@ -506,7 +509,7 @@ class Needle(PartFeature):
 				curve.append(curve[1])
 
 
-		if obj.backboneSource <> None and not obj.externSourcesOff:
+		if obj.backboneSource  !=  None and not obj.externSourcesOff:
 			cs=obj.backboneSource.Shape.Edge1.Curve
 			bb=cs.getPoles()
 			bl=len(bb)
@@ -538,7 +541,7 @@ class Needle(PartFeature):
 			print bbc.tangent(v)
 			t=bbc.tangent(v)[0]
 			p=bbc.value(v)
-			
+
 			print t
 			zarc=np.arctan2(t.y,t.x)
 			zarc *=180.0/np.pi
@@ -549,7 +552,7 @@ class Needle(PartFeature):
 
 			print twister[n]
 			# twister[n]=[0,0,harc]
-			
+
 			print twister[n]
 		print "---------------------------------------ccccccccc--------"
 		print len(twister)
@@ -578,7 +581,7 @@ class Needle(PartFeature):
 	def createBackbone(proxy,obj,bb):
 		if obj.Backbone == None:
 			obj.Backbone=App.activeDocument().addObject('Part::Feature','Backbone')
-		
+
 		#obj.Backbone.Shape=Part.makePolygon([FreeCAD.Vector(b) for b in bb])
 		bs=Part.BSplineCurve()
 		bs.buildFromPoles(bb)
@@ -606,7 +609,7 @@ class Needle(PartFeature):
 
 	def createMesh(proxy,obj,bs):
 			vb=True
-			if obj.Mesh <> None:
+			if obj.Mesh  !=  None:
 				vb=obj.Mesh.ViewObject.Visibility
 				App.activeDocument().removeObject(obj.Mesh.Name)
 			obj.Mesh=toUVMesh(bs,obj.MeshUCount,obj.MeshVCount)
@@ -730,7 +733,7 @@ class Needle(PartFeature):
 
 	def pressed(self,index):
 		import nurbswb.needle_cmds
-		reload(nurbswb.needle_cmds)
+		reload_module(nurbswb.needle_cmds)
 		nurbswb.needle_cmds.pressed(index,App.activeDocument().MyNeedle)
 		print "Pressed"
 
@@ -738,7 +741,7 @@ class Needle(PartFeature):
 		print "Changed"
 		self.dumpix(index)
 
-	def dumpix(self,index): 
+	def dumpix(self,index):
 		print ("dumpix", index.row(),index.column(),(getdata(index)))
 		self.show(getdata(index))
 
@@ -770,7 +773,7 @@ class Needle(PartFeature):
 def importCurves(obj):
 	ss=obj.Spreadsheet
 	print ss.Label
-	if obj.ribtemplateSource <> None and not obj.externSourcesOff:
+	if obj.ribtemplateSource  !=  None and not obj.externSourcesOff:
 		cs=obj.ribtemplateSource.Shape.Edge1.Curve
 		curve=cs.getPoles()
 		cl=len(curve)
@@ -778,7 +781,7 @@ def importCurves(obj):
 		print "update curve",curve
 
 
-	if obj.backboneSource <> None and not obj.externSourcesOff:
+	if obj.backboneSource  !=  None and not obj.externSourcesOff:
 		cs=obj.backboneSource.Shape.Edge1.Curve
 		bb=cs.getPoles()
 		bl=len(bb)
@@ -808,7 +811,7 @@ def commitData(editor):
 #	print ("commit data",editor)
 
 	import nurbswb.needle_cmds
-	reload(nurbswb.needle_cmds)
+	reload_module(nurbswb.needle_cmds)
 	global globdat
 #	print globdat
 	if globdat[0]=='ccmd':
@@ -852,7 +855,7 @@ def startssevents2():
 	filter=SheetFilter()
 	table.installEventFilter(filter)
 	# table.removeEventFilter(filter)
- 
+
 '''
 
 
@@ -913,7 +916,7 @@ def run():
 		#a.useMesh=True
 		a.RibCount=0
 		import nurbswb.needle_models
-		reload (nurbswb.needle_models)
+		reload_module (nurbswb.needle_models)
 		# a.Proxy.getExampleModel(nurbswb.needle_models.modelBanana)
 		model=FreeCAD.ParamGet('User parameter:Plugins/nurbs').GetString("NeedleModel","modelSimple")
 
@@ -953,7 +956,7 @@ if  __name__=='__main__':
 	import Draft
 	import nurbswb
 	import nurbswb.needle as needle
-	reload( nurbswb.needle)
+	reload_module( nurbswb.needle)
 
 	dokname=FreeCAD.ParamGet('User parameter:Plugins/nurbs').GetString("Document","Needle")
 	try: App.closeDocument(dokname)
@@ -1034,12 +1037,12 @@ if  __name__=='__main__':
 
 		Gui.SendMsgToActiveView("ViewFit")
 		print "fertig"
-		 
+
 
 
 		needle.importCurves(a)
 		needle.importCurves(b)
-		
+
 	App.activeDocument()().recompute()
 	App.activeDocument()().recompute()
 	Gui.SendMsgToActiveView("ViewFit")

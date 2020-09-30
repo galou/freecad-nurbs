@@ -89,7 +89,7 @@ def getGraph(sk):
 
 	for i,geo in enumerate(sk.Geometry):
 #		print geo.__class__.__name__
-		if geo.__class__.__name__ <>  'LineSegment': continue
+		if geo.__class__.__name__  !=   'LineSegment': continue
 #		print (i,geo.StartPoint,geo.EndPoint)
 		g.add_node((i,1))
 		g.add_node((i,2))
@@ -97,7 +97,7 @@ def getGraph(sk):
 	for c in sk.Constraints:
 	#	print c.Content
 		tt=c.Content.split(' ')
-		if  tt[2]<>'Type="1"': continue
+		if  tt[2] != 'Type="1"': continue
 
 		First=get_sval(tt[4])
 		FirstPos=get_sval(tt[5])
@@ -135,7 +135,7 @@ def getGraph(sk):
 				continue
 
 			# process only lines 
-			if geo.__class__.__name__ <>  'LineSegment': continue
+			if geo.__class__.__name__  !=   'LineSegment': continue
 
 			n1=findnode(conix,(i,1))
 			g2.node[n1]['vector']= sk.getPoint(i,1)
@@ -232,7 +232,7 @@ def run(animate=True,itercount=101):
 					g2.node[n]['vector2'].z=newpos.z
 
 				# if a height is given by a circle preserve this value
-				if g2.node[n]['radius']<>0:
+				if g2.node[n]['radius'] != 0:
 					g2.node[n]['vector2'].z=g2.node[n]['radius']
 
 				if force.Length> 0.1:

@@ -4,6 +4,7 @@ from say import *
 import nurbswb.pyob
 import Sketcher
 
+from .debug import reload_module
 
 
 def setSketchDatum(sk,name,wert):
@@ -30,19 +31,19 @@ class _ViewProvider(nurbswb.pyob.ViewProvider):
 
 
 class Driver(nurbswb.pyob.FeaturePython):
-	'''Sketch Object with Python''' 
+	'''Sketch Object with Python'''
 
 	##\cond
 	def __init__(self, obj):
 		obj.Proxy = self
 		self.Type = self.__class__.__name__
 		self.obj2 = obj
-		_ViewProvider(obj.ViewObject) 
+		_ViewProvider(obj.ViewObject)
 	##\endcond
 
 	def onBeforeChange(proxy,obj,prop):
 		'''create a backup of the point coordinates'''
-		if prop <> "Geometry": return
+		if prop  !=  "Geometry": return
 
 #		print ("onBeforeChange",prop)
 		proxy.podump=[]
@@ -51,7 +52,7 @@ class Driver(nurbswb.pyob.FeaturePython):
 		for i,g in enumerate(gs):
 #			print (i,g.__class__.__name__)
 			for j in range(4):
-				try: 
+				try:
 #					print ("## ",j,obj.getPoint(i,j))
 					proxy.podump.append([i,j,obj.getPoint(i,j)])
 					proxy.oldpos[(i,j)]=obj.getPoint(i,j)
@@ -68,7 +69,7 @@ class Driver(nurbswb.pyob.FeaturePython):
 
 		if prop in ["radiusA","radiusB"]:
 			print ("onchanged",prop)
-			if obj.base <>None:
+			if obj.base  is not None:
 				obj.base.setDatum(5,obj.radiusA)
 				obj.base.setDatum(6,obj.radiusB)
 			proxy.myExecute(obj)
@@ -113,19 +114,19 @@ class Driver(nurbswb.pyob.FeaturePython):
 
 				for i,(a,b,c,d,e) in enumerate(rel):
 					try:
-						if a==0 : 
+						if a==0 :
 							FreeCAD.obj=obj
 							pos=obj.getPoint(b,c)
 							#if (proxy.oldpos[(b,c)]-pos).Length>0.1:
 							if tomove[i]:
 								bsk.movePoint(d,e,pos)
 							rc=bsk.solve()
-							if rc <>0: print ("solve 0 rc=",rc)
+							if rc  != 0: print ("solve 0 rc=",rc)
 	#					else:
 	#						pos=bsk.getPoint(b,c)
 	#						obj.movePoint(d,e,pos)
 	#						rc=obj.solve()
-	#						if rc <>0: print ("solve 1 rc=",rc)
+	#						if rc  != 0: print ("solve 1 rc=",rc)
 					except:
 						sayexc("movepoint"+str(i))
 
@@ -136,7 +137,7 @@ class Driver(nurbswb.pyob.FeaturePython):
 							pos=bsk.getPoint(d,e)
 							obj.movePoint(b,c,pos)
 							rc=obj.solve()
-							if rc <>0: print ("solve 1 rc=",rc)
+							if rc  != 0: print ("solve 1 rc=",rc)
 					except:
 						sayexc("movepoint"+str(i))
 
@@ -159,7 +160,7 @@ class Driver(nurbswb.pyob.FeaturePython):
 ##\cond
 	def execute(self, obj):
 		''' recompute sketch and than run postprocess: myExecute'''
-		obj.recompute() 
+		obj.recompute()
 		self.myExecute(obj)
 ##\endcond
 
@@ -220,7 +221,7 @@ def create_rib_driver(nr):
 	print ("create driver for rib",rib.Label)
 
 	for i in range(76,96):
-		rib.setDriving(i,False) 
+		rib.setDriving(i,False)
 
 	name="ribdriver_" +str(nr)
 
@@ -241,14 +242,14 @@ def runribtest():
 
 	import nurbswb
 	import nurbswb.createshoerib
-	reload(nurbswb.createshoerib)
+	reload_module(nurbswb.createshoerib)
 	nurbswb.createshoerib.run()
 	rib=App.ActiveDocument.ribbow
 	rib.ViewObject.LineColor = (1.000,0.667,0.000)
 
 	for i in range(76,96):
-		# rib.toggleDriving(i) 
-		rib.setDriving(i,False) 
+		# rib.toggleDriving(i)
+		rib.setDriving(i,False)
 
 	name="ribdriver"
 	runrib(rib,name)
@@ -308,14 +309,14 @@ def runrib(rib,name,nr=None):
 
 	bsk=obj.base
 	rel=np.array(obj.relation).reshape(len(obj.relation)/5,5)
-	
+
 	for i,(a,b,c,d,e) in enumerate(rel):
 				try:
 					if a==0:
 						pos=bsk.getPoint(d,e)
 						obj.movePoint(b,c,pos)
 						rc=obj.solve()
-						if rc <>0: print ("solve 1 rc=",rc)
+						if rc  != 0: print ("solve 1 rc=",rc)
 				except:
 					sayexc("movepoint"+str(i))
 
@@ -330,7 +331,7 @@ def runrib(rib,name,nr=None):
 	Gui.SendMsgToActiveView("ViewFit")
 	Gui.activeDocument().activeView().viewTop()
 
-	if nr<> None:
+	if nr !=  None:
 		grp=App.ActiveDocument.getObject('GRP_'+str(nr))
 		grp.addObject(obj)
 		obj.ViewObject.hide()
@@ -344,7 +345,7 @@ def create_rib_driverALT(nr):
 	print ("create driver for rib",rib.Label)
 
 	for i in range(76,96):
-		rib.toggleDriving(i) 
+		rib.toggleDriving(i)
 
 	name="ribdriver_" +str(nr)
 
@@ -416,7 +417,7 @@ def create_rib_driverALT(nr):
 				1,	6,3,	3,1,
 				1,	7,3,	3,2,
 
-## ab hier fehler 
+## ab hier fehler
 #				1,	8,3,	4,1,
 #				1,	9,3,	4,2,
 #
@@ -463,16 +464,16 @@ def recomputeAll():
 	for i in range(2,15):
 		obj=App.ActiveDocument.getObject('rib_'+str(i))
 		dob=App.ActiveDocument.getObject('ribdriver_'+str(i))
-		if obj <> None:
+		if obj  !=  None:
 			obj.touch()
 		# deactivate the driver feedback to speed up
-		if dob<>None:
+		if dob is not None:
 			dob.off=True
 
 	App.activeDocument().recompute()
 
 	for i in range(2,15):
 		dob=App.ActiveDocument.getObject('ribdriver_'+str(i))
-		if dob<>None:
+		if dob is not None:
 			dob.off=False
 

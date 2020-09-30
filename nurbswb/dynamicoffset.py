@@ -4,6 +4,8 @@ from say import *
 
 Gui.ActiveDocument=None
 import FreeCAD
+from .debug import reload_module
+
 if 0:
 	try:
 		FreeCAD.open(u"/home/thomas/Schreibtisch/tt_offset_example.fcstd")
@@ -14,15 +16,15 @@ if 0:
 		pass
 
 import nurbswb.datatools
-reload (nurbswb.datatools)
+reload_module (nurbswb.datatools)
 
 import scipy.interpolate
 
 
-## calculates a scipy.interpolate.interp1d 
+## calculates a scipy.interpolate.interp1d
 # for the floatlist obj.datalist
 #
-# in debugmode the calculated shape contains wires for both curves and 
+# in debugmode the calculated shape contains wires for both curves and
 # connecting lines between corresponding points on all curves
 
 
@@ -86,7 +88,7 @@ def myupdate(obj):
 	apols2=apols2n
 
 	comps=[]
-	
+
 	comps=[Part.makePolygon([apols1[i],apols[i],apols2[i]]) for i in range(l)]
 	comps += [Part.makePolygon(apols),Part.makePolygon(apols1),Part.makePolygon(apols2)]
 
@@ -94,7 +96,7 @@ def myupdate(obj):
 	bc.interpolate(apols)
 	# bc.setPeriodic()
 	comps.append(bc.toShape())
-	if obj.debug: 
+	if obj.debug:
 		obj.Shape=Part.Compound(comps)
 	else:
 		obj.Shape=bc.toShape()
@@ -109,10 +111,10 @@ import nurbswb.pyob
 # ----------
 #
 #  - **data** - link to a FloatList node
-#  - **curveO** - inner offset curve node 
+#  - **curveO** - inner offset curve node
 #  - **curveI** - outer offset curve node
 #  - **debug**  - displays some helping 2D information
-# 
+#
 # Icon
 # ----
 # @image html plane.svg
@@ -126,7 +128,7 @@ import nurbswb.pyob
 #
 # Example
 # -------
-#\code 
+#\code
 #import nurbswb.datatools
 #fl=nurbswb.datatools.createFloatlist("ParameterList")
 #fl.val007=10
@@ -152,12 +154,12 @@ class DynaOffset(nurbswb.pyob.FeaturePython):
 	def __init__(self, obj):
 		obj.Proxy = self
 		self.Type = self.__class__.__name__
-		nurbswb.pyob.ViewProvider(obj.ViewObject) 
+		nurbswb.pyob.ViewProvider(obj.ViewObject)
 
 
 	def XonChanged(proxy,obj,prop):
 		'''run myExecute for property prop: relativePosition and vertexNumber'''
-		
+
 		print "onChanged ",prop
 		if prop.startswith("val"):
 			data=[]
@@ -198,7 +200,7 @@ def run():
 if __name__=='__main__':
 
 	fl2=App.ActiveDocument.getObject("ParmeterList")
-	if fl2 == None: 
+	if fl2 == None:
 		fl2=nurbswb.datatools.createFloatlist("ParameterList")
 		fl2.val007=10
 

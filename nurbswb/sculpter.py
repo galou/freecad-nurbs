@@ -19,8 +19,9 @@ import random
 
 
 
+from .debug import reload_module
 import nurbswb.isodraw
-reload(nurbswb.isodraw)
+reload_module(nurbswb.isodraw)
 
 
 
@@ -42,7 +43,7 @@ def check(pp,mode,updateNurbs=False,widget=None):
 	if mode=='marker':
 		createMarker(pp)
 		return
-		
+
 	a=time.time()
 
 	pc=App.ActiveDocument.getObject("MyGrid")
@@ -66,7 +67,7 @@ def check(pp,mode,updateNurbs=False,widget=None):
 		ff=-1
 		for i,p in enumerate(ptsk):
 			#if i <2: print (i,(p-pp).Length)
-			if (p-pp).Length <10 : 
+			if (p-pp).Length <10 :
 #				print ("found ",i,(p-pp).Length)
 				ff=i
 				break
@@ -136,9 +137,9 @@ def check(pp,mode,updateNurbs=False,widget=None):
 
 				ptskarr=np.array(ptsk).reshape(uc+1,vc+1,3)
 				bs.buildFromPolesMultsKnots(ptskarr, mv, mu, kv, ku, False, False ,3,3)
-				
-				
-				
+
+
+
 			nu.Shape=bs.toShape()
 
 			c=time.time()
@@ -148,9 +149,9 @@ def createMarker(self):
 	print "create Marker"
 	import nurbswb
 	import nurbswb.geodesic_lines
-	reload(nurbswb.geodesic_lines)
-	
-	
+	reload_module(nurbswb.geodesic_lines)
+
+
 	l = nurbswb.geodesic_lines.makeLabel(direction='Horizontal',labeltype='Position')
 	l.obj=self.nu #Gui.Selection.getSelection()[0]
 	l.LabelType = u"Custom"
@@ -167,7 +168,7 @@ def createMarker(self):
 	l.v=v*100
 	l.TargetPoint=self.pos
 	l.Label=str((round(self.pos.x,1),round(self.pos.y,1),round(self.pos.z,1)))
-	
+
 
 
 ##\endcond
@@ -212,7 +213,7 @@ class EventFilter(QtCore.QObject):
 				z == 'PySide.QtCore.QEvent.Type.User'  or \
 				z == 'PySide.QtCore.QEvent.Type.Paint' or \
 				z == 'PySide.QtCore.QEvent.Type.LayoutRequest' or\
-				z == 'PySide.QtCore.QEvent.Type.UpdateRequest'  : 
+				z == 'PySide.QtCore.QEvent.Type.UpdateRequest'  :
 			return QtGui.QWidget.eventFilter(self, o, e)
 
 
@@ -264,7 +265,7 @@ class EventFilter(QtCore.QObject):
 						self.mode='zero'
 						return False
 					elif e.key()== QtCore.Qt.Key_F6 :
-						
+
 						say("------------F6 none-----------------")
 						self.dialog.modl.setText("Mode: none")
 						self.mode='none'
@@ -346,29 +347,29 @@ class EventFilter(QtCore.QObject):
 		if event.type() == QtCore.QEvent.MouseMove:
 				(x,y)=Gui.ActiveDocument.ActiveView.getCursorPos()
 				t=Gui.ActiveDocument.ActiveView.getObjectsInfo((x,y))
-				
+
 				#---------------------
 
 				cursor=QtGui.QCursor()
 				p = cursor.pos()
-#				if p.x()<100 or p.y()<100: 
+#				if p.x()<100 or p.y()<100:
 #					print "jump cursor facedraw 92"
 #					cursor.setPos(p.x()+100, p.y()+100)
 				#-----------------------------------
 
-				if t<>None: # if objects are under the mouse
+				if t is not None: # if objects are under the mouse
 					#pts=App.ActiveDocument.shoe_last_scanned.Points.Points
 #					print "-----!"
 					for tt in t:
-						if tt['Object']=="MyGrid_N": 
+						if tt['Object']=="MyGrid_N":
 							pp=FreeCAD.Vector(tt['x'],tt['y'],tt['z'])
-							
+
 							sp=App.ActiveDocument.getObject("Sphere")
 							if sp==None:
 								sp=App.ActiveDocument.addObject("Part::Sphere","Sphere")
 							sp.Placement.Base=pp
-							
-							
+
+
 							sf=self.nu.Shape.Face1.Surface
 							print "Position on nurbs:",sf.parameter(pp)
 							self.pos=pp
@@ -378,7 +379,7 @@ class EventFilter(QtCore.QObject):
 								check(pp,self.mode,False,self)
 							break
 					for tt in t:
-						if tt['Object']=="MyGrid_M": 
+						if tt['Object']=="MyGrid_M":
 #							print (tt['Object'],tt['Component'])
 #							print (tt['x'])
 #							print (tt['y'])
@@ -446,7 +447,7 @@ def drawcurve(wire,face,facepos=FreeCAD.Vector()):
 
 	#pts=[p.Point for p in w.Vertexes]
 	pts=[p.Point- wpos for p in w.Vertexes]
-	
+
 	sf=t.Surface
 
 	bs=sf
@@ -490,10 +491,10 @@ def drawcurve(wire,face,facepos=FreeCAD.Vector()):
 	ee.reverse()
 	splitb=[(ee,face)]
 	r2=Part.makeSplitShape(face, splitb)
-	
+
 	if hasattr(wire,"drawFace"):
 
-			try: 
+			try:
 				rc=r2[0][0]
 				rc=r[0][0]
 			except: return
@@ -538,7 +539,7 @@ def _drawring(name,wires,dirs,face,facepos=FreeCAD.Vector()):
 
 		#pts=[p.Point for p in w.Vertexes]
 		pts=[p.Point- wpos for p in w.Vertexes]
-		
+
 		sf=t.Surface
 
 		bs=sf
@@ -548,7 +549,7 @@ def _drawring(name,wires,dirs,face,facepos=FreeCAD.Vector()):
 
 		pts2da=[sf.parameter(p) for p in pts[1:]]
 		pts2d=[FreeCAD.Base.Vector2d(p[0],p[1]) for p in pts2da]
-		
+
 
 		bs2d = Part.Geom2d.BSplineCurve2d()
 		bs2d.setPeriodic()
@@ -580,7 +581,7 @@ def _drawring(name,wires,dirs,face,facepos=FreeCAD.Vector()):
 
 			#pts=[p.Point for p in w.Vertexes]
 			pts=[p.Point- wpos for p in w.Vertexes]
-			
+
 			sf=t.Surface
 
 			bs=sf
@@ -642,7 +643,7 @@ def _drawring(name,wires,dirs,face,facepos=FreeCAD.Vector()):
 					sp=App.ActiveDocument.addObject("Part::Spline",name)
 
 				#if wire.reverseFace: sp.Shape=r2[0][0]
-				#else: 
+				#else:
 
 				sp.Shape=r[0][0]
 
@@ -711,7 +712,7 @@ class MyWidget(QtGui.QWidget):
 		h=int(self.height.value())
 		sp.Radius=(1+r)*10
 		App.activeDocument().recompute()
-		return 
+		return
 
 	def ef_action(self,*args):
 		''' dummy method'''
@@ -747,7 +748,7 @@ def dialog(source=None):
 
 	btn2=QtGui.QPushButton("Update Nurbs")
 	btn2.clicked.connect(w.updateNurbs)
-	
+
 
 	btn=QtGui.QPushButton("Apply and close")
 	btn.clicked.connect(w.apply)
@@ -760,7 +761,7 @@ def dialog(source=None):
 
 	poll=QtGui.QLabel("Area:")
 
-	ar=QtGui.QDial() 
+	ar=QtGui.QDial()
 	ar.setMaximum(10)
 	ar.setNotchesVisible(True)
 	ar.valueChanged.connect(w.update)
@@ -768,7 +769,7 @@ def dialog(source=None):
 
 	poll2=QtGui.QLabel("height:")
 
-	he=QtGui.QDial() 
+	he=QtGui.QDial()
 	he.setMaximum(10)
 	he.setNotchesVisible(True)
 #	he.valueChanged.connect(w.setcursor2)
@@ -777,7 +778,7 @@ def dialog(source=None):
 
 	box = QtGui.QVBoxLayout()
 	w.setLayout(box)
-	
+
 	for ww in [modl,btn2,btn,cobtn,poll,ar,poll2,he] :
 		box.addWidget(ww)
 
@@ -795,7 +796,7 @@ def start():
 
 	ef=EventFilter()
 	ef.mouseWheel=0
-	
+
 	ef.subelement='SUBELE'
 	ef.mode='up'
 	ef.pc=App.ActiveDocument.MyGrid
@@ -912,11 +913,11 @@ VerticalLayoutTab:
 
 
 #	VerticalLayout:
-		setVerticalStrech:  10	
+		setVerticalStrech:  10
 
 		QtGui.QLabel:
 			setText: "    C O N F I G U R E"
-			
+
 
 		HorizontalLayout:
 			addSpacing: 0
@@ -992,18 +993,18 @@ VerticalLayoutTab:
 		HorizontalLayout:
 
 			QtGui.QCheckBox:
-				id: 'polegrid' 
+				id: 'polegrid'
 				setText: 'calculate PoleGrid'
 #				stateChanged.connect: app.calculatePoleGrid
 				visibility: False
 
 			QtGui.QCheckBox:
-				id: 'setmode' 
+				id: 'setmode'
 				setText: 'Pole only'
 				setVisible: False
 
 			QtGui.QCheckBox:
-				id: 'relativemode' 
+				id: 'relativemode'
 				setText: 'Height relative'
 #				stateChanged.connect: app.relativeMode
 				setChecked: True
@@ -1049,7 +1050,7 @@ VerticalLayoutTab:
 
 			QtGui.QLabel:
 				setText: "u"
-				
+
 
 			QtGui.QLineEdit:
 				setText: "1"
@@ -1129,13 +1130,13 @@ VerticalLayoutTab:
 #				clicked.connect: app.setPole2
 
 		QtGui.QCheckBox:
-			id: 'pole1active' 
+			id: 'pole1active'
 			setText: 'Pole 1 in change'
 #			stateChanged.connect: app.relativeMode
 			setChecked: True
 
 		QtGui.QCheckBox:
-			id: 'singlepole' 
+			id: 'singlepole'
 			setText: 'Single Pole mode'
 #			stateChanged.connect: app.relativeMode
 			setChecked: True
@@ -1153,7 +1154,7 @@ VerticalLayoutTab:
 
 
 class MyApp(object):
-	
+
 	def __init__(self):
 		self.lock=False
 
@@ -1161,7 +1162,7 @@ class MyApp(object):
 	def resetEdit(self):
 		Gui.ActiveDocument.resetEdit()
 		import nurbswb.miki as miki
-		#reload(miki)
+		reload_module(miki)
 		mw=miki.getMainWindow()
 		miki.getComboView(mw).removeTab(2)
 		miki.getComboView(mw).setCurrentIndex(0)
@@ -1175,7 +1176,7 @@ class MyApp(object):
 			rc=self.root.ids['focusmode'].currentText()
 			v=self.root.ids['vd'].value()
 			self.root.ids['pole1'].setText("Pole 1:" + str([u+1,v+1]))
-			if self.root.ids['singlepole'].isChecked(): 
+			if self.root.ids['singlepole'].isChecked():
 			self.root.ids['runbutton'].hide()
 			self.root.ids['runbutton'].show()
 
@@ -1226,7 +1227,7 @@ class MyApp(object):
 def mydialog(obj):
 
 	import nurbswb.miki as miki
-	reload(miki)
+	reload_module(miki)
 
 	app=MyApp()
 	miki=miki.Miki()
@@ -1244,7 +1245,7 @@ def mydialog(obj):
 
 	miki.ids['heightc'].addItems([str(n) for n in range(1,11)])
 	miki.ids['heightc'].setCurrentIndex(1)
-	
+
 	return miki
 
 

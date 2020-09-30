@@ -29,7 +29,7 @@ def showdialog(title="Fehler",text="Schau in den ReportView fuer mehr Details",d
 	msg.setIcon(QtGui.QMessageBox.Warning)
 	msg.setText(text)
 	msg.setWindowTitle(title)
-	if detail<>None:   msg.setDetailedText(detail)
+	if detail is not None:   msg.setDetailedText(detail)
 	msg.exec_()
 
 
@@ -92,7 +92,7 @@ def orderdata(obj,inner=False,plotit=False,medianfil=0,cf=True):
 		vn=v-vm
 		#	print np.arctan2(vm.x,vm.y)
 		try:
-			if aps[np.arctan2(vn.x,vn.y)] <> vn:
+			if aps[np.arctan2(vn.x,vn.y)]  !=  vn:
 				print "Fehler 2 punkte gleiche richtung"
 				print v
 				print aps[np.arctan2(vn.x,vn.y)]

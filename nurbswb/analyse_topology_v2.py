@@ -17,8 +17,9 @@ import Part,Points
 
 import networkx as nx
 import random
-import os 
+import os
 import nurbswb
+from .debug import reload_module
 
 # modul variables
 g=nx.Graph()
@@ -49,7 +50,7 @@ def createFaceMidPointmodel(a):
 	for f in fs:
 		c=f.CenterOfMass
 		pts.append(c)
-		for v in f.Vertexes: 
+		for v in f.Vertexes:
 			p=v.Point
 			pts.append(p)
 			col.append(Part.makeLine(rf(c),rf(p)))
@@ -77,7 +78,7 @@ def loadModel(s):
 		pp=(round(v.Point.x,2),round(v.Point.y,2),round(v.Point.z,2))
 
 		try: points[pp]
-		except: 
+		except:
 			points[pp]=i
 			g.add_node(i,pos=(v.Point.x,v.Point.y),keys=[],quality=0,vector=ptokey(v.Point))
 
@@ -111,22 +112,22 @@ def loadModel(s):
 				esl.append(e)
 				sl += g.edge[n][e]['vector'].Length
 				vs += g.edge[n][e]['vector']
-				edirs += [g.edge[n][e]['vector']] 
+				edirs += [g.edge[n][e]['vector']]
 
 			vsn=FreeCAD.Vector(vs)
 
 			# some trouble ist the sum of all vectors is zero
 			if 0: # still look for a better solution
-				if vsn.Length < 1: 
+				if vsn.Length < 1:
 					vsn= g.edge[n][esl[0]]['vector'].cross(g.edge[n][esl[2]]['vector'])
 
-				if vsn.Length < 1: 
+				if vsn.Length < 1:
 					vsn= g.edge[n][esl[0]]['vector'].cross(g.edge[n][esl[1]]['vector'])
 
 
-			if vsn.Length > 1: 
+			if vsn.Length > 1:
 				vsn.normalize()
-			else: vsn=0 
+			else: vsn=0
 
 			for e in es:
 				v = FreeCAD.Vector(g.edge[n][e]['vector'])
@@ -318,7 +319,7 @@ def werteausLevel(i=1):
 	for k in kp:
 		if kp[k]==1: anz += 1
 
-	#set the quality of the unique points 
+	#set the quality of the unique points
 	for n in g.nodes():
 		if g.node[n]['quality']==0:
 			key=g.node[n]['keys'][i]
@@ -373,14 +374,14 @@ def runAna(model,silent=False):
 	for i,v in enumerate(sp.Vertexes):
 		pp=(round(v.Point.x,2),round(v.Point.y,2),round(v.Point.z,2))
 		try:
-#			print (pp,i) 
+#			print (pp,i)
 #			print ("found ",points[pp])
 			gi=points[pp]
 
 			g.node[gi]["label"]=bm.Label+":Vertex"+str(i+1)
 			g.node[gi]["Vertex"]=v
 #			print g.node[gi]
-		except: 
+		except:
 			print "NOT FOUND"
 			pass
 
@@ -391,7 +392,7 @@ def runAna(model,silent=False):
 #			print (v,ptokey(v.Point),points[ptokey(v.Point)])
 			pix=points[ptokey(v.Point)]
 #			print g.node[pix]
-			
+
 			#flaechennormale anfuegen
 			(u,v)=f.Surface.parameter(v.Point)
 #			print( pix,"Addiere Flaechennoirmalw",(u,v),f.normalAt(u,v))
@@ -405,14 +406,14 @@ def runAna(model,silent=False):
 		c=f.CenterOfMass
 		pp=(round(c.x,2),round(c.y,2),round(c.z,2))
 		try:
-#			print (pp,i) 
+#			print (pp,i)
 #			print ("found ",points[pp])
 			gi=points[pp]
 
 			g.node[gi]["label"]=bm.Label+":Face"+str(i+1)
 			g.node[gi]["Face"]=f
 #			print g.node[gi]
-		except: 
+		except:
 			print "NOT FOUND"
 			pass
 
@@ -420,9 +421,9 @@ def runAna(model,silent=False):
 
 	kp=createKeys()
 	print g.nodes()
-	
+
 	setQuality(g.nodes(),kp)
-	
+
 	#hack
 	#return
 
@@ -493,7 +494,7 @@ def displayQualityPoints():
 			if  g.node[v]['quality']==q: pts.append(g.node[v]['vector'])
 
 #		print pts
-		if pts<>[]:
+		if pts != []:
 			Points.show(Points.Points(pts))
 			App.ActiveDocument.ActiveObject.ViewObject.ShapeColor=(
 				random.random(),random.random(),random.random())
@@ -523,7 +524,7 @@ def addToVertexStore():
 	g=FreeCAD.g
 	a=FreeCAD.a
 	for v in g.nodes():
-		
+
 		try: g.node[v]['label']
 		except: g.node[v]['label']='----'
 
@@ -555,7 +556,7 @@ def resetVertexStore():
 	print FreeCAD.PT
 
 
-def printVertexStore(): 
+def printVertexStore():
 	'''print the vertex store'''
 	print "The vertex Store"
 	for j in FreeCAD.PT:
@@ -563,7 +564,7 @@ def printVertexStore():
 		print j
 		vs=FreeCAD.PT[j]
 		for v in vs:
-			if str(v[1])<>'----':
+			if str(v[1]) != '----':
 				print v[1:-1]
 #				print "	",v[-1]
 
@@ -571,7 +572,7 @@ def printVertexStore():
 
 
 
-def displayVertexStore(): 
+def displayVertexStore():
 	'''print the vertex store'''
 	print "The vertex Store compare"
 	found=0
@@ -587,12 +588,12 @@ def displayVertexStore():
 				if str(v[1]) =='----': continue
 				k=v[3]
 				count +=1
-				try: 
+				try:
 					keys[k] += 1
 					keyd[k] += [(j,v[:-2])]
 					# print v
-				except: 
-					keys[k]=1 
+				except:
+					keys[k]=1
 					keyd[k] = [(j,v[:-2])]
 	pts=[]
 	for k in keys:
@@ -606,7 +607,7 @@ def displayVertexStore():
 			#print keyd[k][0][1]
 			# print keyd[k][1][1]
 
-#	if pts<>[]:
+#	if pts != []:
 #		#print pts
 #		Points.show(Points.Points(pts))
 #		App.ActiveDocument.ActiveObject.ViewObject.ShapeColor=(
@@ -628,7 +629,7 @@ def displayVertexStore():
 	print
 	print "nach keys ausgegeben"
 	for k in keys:
-		if k[0] %100 <>0: #ignore reine flaechen
+		if k[0] %100  != 0: #ignore reine flaechen
 			print
 			print k
 			for p in keyd[k]:
@@ -640,10 +641,10 @@ def displayVertexStore():
 	print "nach keys ausgegeben nur noch paare-------------------------------"
 	for k in keys:
 		first=True
-		if k[0] %100 <>0: #ignore reine flaechen
+		if k[0] %100  != 0: #ignore reine flaechen
 			if len(keyd[k])==2:
 				[p,q] = keyd[k]
-				if p[1][0] <> q[1][0]:
+				if p[1][0]  !=  q[1][0]:
 					if p[1][1].startswith( p[1][0]):
 						if first:
 							print
@@ -657,7 +658,7 @@ def displayVertexStore():
 
 	print "gefundene paare ",anz
 
-	if gps<>[]:
+	if gps != []:
 		Points.show(Points.Points(gps))
 		App.ActiveDocument.ActiveObject.ViewObject.ShapeColor=(
 			random.random(),random.random(),random.random())
@@ -667,7 +668,7 @@ def displayVertexStore():
 
 
 
-#	if pts<>[]:
+#	if pts != []:
 #		#print pts
 #		Points.show(Points.Points(pts))
 #		App.ActiveDocument.ActiveObject.ViewObject.ShapeColor=(
@@ -715,7 +716,7 @@ def getUniques(keys):
 			us += keys[k]
 	return us
 
-	
+
 def Test4():
 	g=FreeCAD.g
 	print "Test 4"
@@ -726,7 +727,7 @@ def Test4():
 	print "keytab all results ..."
 	for k in keys:
 		print (k,keys[k])
-		
+
 	uniqs=getUniques(keys)
 	print "uniques start "
 	print uniqs
@@ -738,7 +739,7 @@ def Test4():
 	found=True
 	for i in range(8):
 		if not found: break
-		
+
 		found=False
 		print "loop i= ",i
 		for n in uniqs:
@@ -749,19 +750,19 @@ def Test4():
 					nbs2.append(na)
 
 			keys=getkeytab(g,nbs2)
-			
+
 #			print
 #			print ("node ",n,getkeyg(g,n),nbs2)
 #			print nbs
-			
+
 			for k in keys:
 				print (k,keys[k])
 
 			uniqs2=getUniques(keys)
-			if uniqs2<>[]:
+			if uniqs2 != []:
 				print "----------------------------------uniques2: ",uniqs2
 				for u in uniqs2:
-					if u not in uniqs: 
+					if u not in uniqs:
 		#				print "-add--------------------",u
 						found=True
 						uniqs += [u]
@@ -807,12 +808,12 @@ import time
 def Test3():
 	import nurbswb.fem_edgelength_mesh
 	for i in range(1):
-		reload (nurbswb.fem_edgelength_mesh)
+		reload_module (nurbswb.fem_edgelength_mesh)
 		nurbswb.fem_edgelength_mesh.run()
 		Gui.updateGui()
 		print "i ",i
 		time.sleep(0.01)
-	
+
 
 '''
 

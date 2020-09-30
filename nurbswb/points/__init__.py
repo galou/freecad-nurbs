@@ -259,7 +259,7 @@ def createAll(mode="all",obj=None,dimU=500,dimV=500,
 
 	assert dimU*dimV==len(p)
 
-#	if mode<>"all":
+#	if mode != "all":
 #		return
 
 
@@ -274,7 +274,7 @@ def createAll(mode="all",obj=None,dimU=500,dimV=500,
 #	pa3=[]
 #	a=0
 #	for i in range(dimU):
-#		if pa2[i][0][0]<>a:
+#		if pa2[i][0][0] != a:
 #			pa3 += [pa2[i]] 
 #			print pa2[i][0][0]-a
 #		
@@ -313,7 +313,7 @@ def createAll(mode="all",obj=None,dimU=500,dimV=500,
 					print [pmin[i+1],j,pmax[i,j]]
 				a=FreeCAD.Vector(pmin[i+1,j])
 				b=FreeCAD.Vector(pmax[i,j])
-				if a<>b:
+				if a != b:
 					if b.z<a.z: a,b=b,a
 					comp += [ Part.makePolygon([a,a+(b-a)*10])]
 					
@@ -746,7 +746,7 @@ def run(pts,loop,d,dd,outliner=True):
 			fak=1-abs(xp-x)/d
 			wv +=  fak
 			yv +=  fak*y
-		if wv<>0:
+		if wv != 0:
 			yn=yv/wv
 		else: continue
 
@@ -762,7 +762,7 @@ def run(pts,loop,d,dd,outliner=True):
 					fak=1-abs(xp-x)/d
 					wv +=  fak
 					yv +=  fak*y
-		if wv<>0:
+		if wv != 0:
 			yn=yv/wv
 			pts3 += [FreeCAD.Vector(xp,yn,0)]
 

@@ -175,7 +175,7 @@ class ViewProviderHelper(nurbswb.pyob.ViewProvider):
 		if prop == "Shape": return
 		if prop == "Placement": return
 		pm=fp.Placement
-		if fp.source<>None:
+		if fp.source is not None:
 			#say("VO updateData " + prop)
 			#say((fp,fp.source,fp.mode))
 			try:

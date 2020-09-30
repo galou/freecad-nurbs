@@ -1,9 +1,11 @@
 '''
-sole model collection 
+sole model collection
 the model can be selected by the listModels method
 '''
 
 import numpy as np
+
+from .debug import reload_module
 
 ## the basic model
 
@@ -92,7 +94,7 @@ class modelC(model):
 def listModels(silent=False):
 	''' erzeugt liste aller modelle mit modell und modell.info '''
 	import nurbswb.sole_models
-	reload(nurbswb.sole_models)
+	reload_module(nurbswb.sole_models)
 	l=[]
 	for m in dir(nurbswb.sole_models):
 		if m.startswith('model'):
@@ -112,7 +114,7 @@ def test():
 		pass
 
 	import nurbswb.sole
-	reload(nurbswb.sole)
+	reload_module(nurbswb.sole)
 	nurbswb.sole.runA(model=modelY)
 
 

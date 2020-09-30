@@ -16,9 +16,10 @@ import numpy as np
 import time
 import random
 
+from .debug import reload_module
 import nurbswb.pyob
 from nurbswb.pyob import  FeaturePython,ViewProvider
-reload (nurbswb.pyob)
+reload_module (nurbswb.pyob)
 
 
 
@@ -168,7 +169,7 @@ def run(sk):
 def init_bezierring(sk,count=5,source=None):
 
 
-	if source <> None:
+	if source  !=  None:
 		ptsa=source.Shape.Wires[0].discretize(count*2*10)
 		ptsb=[]
 
@@ -200,7 +201,7 @@ def init_bezierring(sk,count=5,source=None):
 			pts +=[p,pm,p2]
 
 	for i in range(count):
-			if i <> 0: # connect to the last segment with a connector line
+			if i  !=  0: # connect to the last segment with a connector line
 				lc=sk.addGeometry(Part.LineSegment(pts[3*i-1],pts[3*i]),False)
 				sk.addConstraint(Sketcher.Constraint('Coincident',lb,2,lc,1))
 
@@ -221,7 +222,7 @@ def init_bezierring(sk,count=5,source=None):
 #			sk.addConstraint(Sketcher.Constraint('Block',lb))
 			sk.addConstraint(Sketcher.Constraint('Coincident',la,2,lb,1))
 
-			if i <> 0: # connect connector line to the new created segment
+			if i  !=  0: # connect connector line to the new created segment
 				sk.addConstraint(Sketcher.Constraint('Coincident',lc,2,la,1))
 
 	# close the figure
@@ -239,7 +240,7 @@ def init_bezierring(sk,count=5,source=None):
 
 def createBezierSketch(name="BezierRing",source=None):
 
-	if source <> None:
+	if source  !=  None:
 		name="Sk_"+source.Label+'_'
 
 	obj = FreeCAD.ActiveDocument.addObject("Sketcher::SketchObjectPython",name)
@@ -277,7 +278,7 @@ class FollowerSketch(FeaturePython):
 		if len(obj.Geometry)==0: return
 		if not obj.init:return
 
-		if time.time()-self.timestamp<0.1 and prop<>"force":
+		if time.time()-self.timestamp<0.1 and prop != "force":
 			return
 		self.timestamp=time.time()
 
@@ -324,14 +325,14 @@ class FollowerSketch(FeaturePython):
 
 def createFollowerSketch(name="Follower",source=None):
 
-	if source <> None:
+	if source  !=  None:
 		name="Sk_"+source.Label+'_'
 
 	obj = FreeCAD.ActiveDocument.addObject("Sketcher::SketchObjectPython",name)
 	FollowerSketch(obj)
 	import sketcher
 	import sketcher.feedbacksketch
-	reload(sketcher.feedbacksketch)
+	reload_module(sketcher.feedbacksketch)
 	sketcher.feedbacksketch.copySketch(App.ActiveDocument.Sketch,obj)
 
 	obj.init=True
@@ -345,7 +346,7 @@ def createFollowerSketch(name="Follower",source=None):
 
 
 class ArcSketch(FeaturePython):
-	'''Sketch Object with Python to create two smoothing arcs''' 
+	'''Sketch Object with Python to create two smoothing arcs'''
 
 	##\cond
 	def __init__(self, obj, icon='/home/thomas/.FreeCAD/Mod/freecad-nurbs/icons/draw.svg'):
@@ -436,7 +437,7 @@ def createArcSketch(name="TwoArc",source=None):
 	except:
 		pass
 
-	if source <> None:
+	if source  !=  None:
 		name="Sk_"+source.Label+'_'
 
 	obj = FreeCAD.ActiveDocument.addObject("Sketcher::SketchObjectPython",name)

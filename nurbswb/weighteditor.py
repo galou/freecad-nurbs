@@ -53,7 +53,7 @@ def pk(obj=None,w=None):
 		pass
 
 		# Hilfswire machen
-		if obj<>None:
+		if obj is not None:
 			a=obj
 		else:
 			[a]=Gui.Selection.getSelection()

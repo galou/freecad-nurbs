@@ -14,6 +14,7 @@ import numpy as np
 import Draft,Points,Part,Sketcher
 import nurbswb.say
 from nurbswb.say import *
+from .debug import reload_module
 import random
 import time
 
@@ -29,13 +30,13 @@ def BB():
 
 
 import inspect
-reload (nurbswb.say)
+reload_module (nurbswb.say)
 
 from nurbswb.miki_g import createMikiGui2, MikiApp
-reload( nurbswb.miki_g)
+reload_module( nurbswb.miki_g)
 
 import nurbswb.configuration
-reload (nurbswb.configuration)
+reload_module (nurbswb.configuration)
 from nurbswb.configuration import getcf,getcb,getcs
 
 
@@ -62,7 +63,7 @@ def checkcurve(curve):
 ##\cond
 
 import nurbswb.pyob
-reload (nurbswb.pyob)
+reload_module (nurbswb.pyob)
 from nurbswb.pyob import  FeaturePython,ViewProvider
 
 ##\endcond
@@ -203,7 +204,7 @@ class Bering(FeaturePython):
 			ks=range(len(ms))
 			bc.buildFromPolesMultsKnots(pts,ms,ks,True,3)
 			fp.Shape=bc.toShape()
-			
+
 			return
 
 		if fp.detach: #use the own data instead of the source
@@ -300,7 +301,7 @@ class Bering(FeaturePython):
 
 			# offset mode
 
-			if fp.preHeight<>0:
+			if fp.preHeight != 0:
 				bcpre=Part.BSplineCurve()
 				ptspre=[]
 				for p in pts:
@@ -323,7 +324,7 @@ class Bering(FeaturePython):
 					pp2=fp.source.Placement.multiply(fp.prePlacement.multiply(ppa))
 					ptspre += [pp2.Base]
 
-			if fp.postHeight<>0:
+			if fp.postHeight != 0:
 				bcpost=Part.BSplineCurve()
 				ptspost=[]
 				for p in pts:
@@ -446,7 +447,7 @@ class Bering(FeaturePython):
 
 
 	def executeHACK(self,fp):
-		
+
 		print "HACK for DEmo continuity curvature"
 
 		pms=fp.source.Placement
@@ -463,15 +464,15 @@ class Bering(FeaturePython):
 		print ms
 		print len(pts)
 		print ks
-		
+
 		bc.buildFromPolesMultsKnots(pts,ms,ks,False,degree)
 		fp.Shape=bc.toShape()
-		
+
 		return
 
 
 
-class _VPBeface(ViewProvider): 
+class _VPBeface(ViewProvider):
 	pass
 
 
@@ -933,7 +934,7 @@ class Beface(FeaturePython):
 				af.insertUKnot(i,3,0)
 
 		# hier feinteilung flaeche
-		if fp.endu>0 and fp.endv<>0:
+		if fp.endu>0 and fp.endv != 0:
 			af.segment(fp.startu,fp.endu,fp.startv,fp.endv)
 		# af.segment(0,5,1.5,2.5)
 
@@ -992,7 +993,7 @@ class Beface(FeaturePython):
 def genk(start,ende,scale,pos,source,name="BeringSketch",show=True):
 	'''create a bering from a source object'''
 
-	if name<>"BeringSketch":
+	if name != "BeringSketch":
 		name=name+'gg'
 		sk=App.ActiveDocument.getObject(name)
 	else: sk=None
@@ -1314,7 +1315,7 @@ class Product(FeaturePython):
 ##\cond
 	def execute(self,fp):
 
-		if fp.uSource2<>None and fp.vSource2<>None:
+		if fp.uSource2 is not None and fp.vSource2 != None:
 
 			ptsu= np.array(fp.uSource.Shape.Edges[fp.uEdge].Curve.getPoles())
 			ptsu2= np.array(fp.uSource2.Shape.Edges[fp.uEdge2].Curve.getPoles())
@@ -1421,7 +1422,7 @@ class Product(FeaturePython):
 			ptsb2=ptsb.reshape(1,sb,3)
 
 
-			if fp.uSource2<>None:
+			if fp.uSource2 is not None:
 
 				ptsa=np.array(ptsa).reshape(sa,3)
 
@@ -1452,7 +1453,7 @@ class Product(FeaturePython):
 					ptsa *= 0.5
 					#ptsb[:,:,0:1] *= 0.5
 
-			if fp.uSource2<>None:
+			if fp.uSource2 is not None:
 				poles=np.array(ptsaa)
 			else:
 				poles=ptsa+ptsb2
@@ -2294,7 +2295,7 @@ def SurfaceEditor():
 
 		def resetDialog(self):
 			for idx in  'udial','vdial','ndial','scale','xdial','ydial','zdial','xrot','yrot','zrot':
-				if self.root.ids[idx].value()<>0:
+				if self.root.ids[idx].value() != 0:
 					self.root.ids[idx].setValue(0)
 
 		def connectSelection(self):
@@ -3328,7 +3329,7 @@ class HelmetTubeConnector(FeaturePython):
 
 def createHelmet():
 	import nurbswb.helmet
-	reload(nurbswb.helmet)
+	reload_module(nurbswb.helmet)
 	nurbswb.helmet.createHelmet()
 
 
@@ -3860,13 +3861,13 @@ class QuadPm(FeaturePython):
 	def execute(self,fp):
 
 		comps=[]
-		if fp.sourceA <> None:
+		if fp.sourceA  !=  None:
 			fp.pointA=fp.sourceA.Placement
-		if fp.sourceB <> None:
+		if fp.sourceB  !=  None:
 			fp.pointB=fp.sourceB.Placement
-		if fp.sourceC <> None:
+		if fp.sourceC  !=  None:
 			fp.pointC=fp.sourceC.Placement
-		if fp.sourceD <> None:
+		if fp.sourceD  !=  None:
 			fp.pointD=fp.sourceD.Placement
 
 
@@ -3929,10 +3930,10 @@ def FaceToBezierSurface():
 		print s
 		n=s.toNurbs()
 		sf=n.Face1.Surface
-		
+
 		#sf.increaseDegree(3,3)
-		
-		
+
+
 		umd=max(sf.UDegree,3)
 		vmd=max(sf.VDegree,3)
 		sf.increaseDegree(umd,vmd)
@@ -4543,14 +4544,14 @@ def createGordon(obj,scale=5.0):
 
 
 
-	if obj.ribs<>None:
+	if obj.ribs is not None:
 		polsu=np.array([a.Shape.Edge1.Curve.getPoles() for a in obj.ribs])
 		suc=len(obj.ribs)-1
-	if obj.meridians<>None:
+	if obj.meridians is not None:
 		polsv=np.array([a.Shape.Edge1.Curve.getPoles() for a in obj.meridians])
 		svc=len(obj.meridians)-1
 
-	if obj.grid<>None:
+	if obj.grid is not None:
 
 		suc=obj.uCount-1
 		svc=obj.vCount-1

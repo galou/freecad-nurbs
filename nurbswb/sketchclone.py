@@ -69,10 +69,10 @@ class SketchClone(nurbswb.pyob.FeaturePython):
 						count +=1
 						obj.movePoint(i,j,posn+obj.offset)
 						rc=obj.solve()
-						if rc <>0: print ("solve 0 rc=",rc)
+						if rc  != 0: print ("solve 0 rc=",rc)
 
 			rc=obj.solve()
-			if rc <>0: print ("solve 0 rc=",rc)
+			if rc  != 0: print ("solve 0 rc=",rc)
 			obj.recompute()
 			# bsk.recompute()
 		except:

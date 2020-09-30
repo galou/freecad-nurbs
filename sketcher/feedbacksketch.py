@@ -297,7 +297,7 @@ class FeedbackSketch(FeaturePython):
 						changed[gets]=2
 					except:
 						changed[gets]=0
-						if valwar <> val_cgi: 
+						if valwar  !=  val_cgi: 
 							changed[gets]=1
 
 					if changed[gets]==2: 
@@ -470,7 +470,7 @@ class FeedbackSketch(FeaturePython):
 			for subs in obj.bases:
 #				print "erstelle Sicherung ",subs
 				g=getattr(obj,"base"+subs)
-				if g <>None:
+				if g  is not None:
 					gs,cs,cons=storeSketch(g)
 				else: gs,cs,cons=[],[],[]
 				dats.append((gs,cs,cons))
@@ -492,7 +492,7 @@ class FeedbackSketch(FeaturePython):
 				for i,subs in enumerate(obj.bases):
 #					print ("hole Section ",i,subs)
 					g=getattr(obj,"base"+subs)
-					if g<>None:
+					if g is not None:
 						gs,cs,cons=dats[i]
 						resetSketch(g)
 						fillSketch(g,gs,cs,cons)
@@ -508,7 +508,7 @@ class FeedbackSketch(FeaturePython):
 			for subs in obj.bases:
 #				print "Section ",subs
 				g=getattr(obj,"base"+subs)
-				if g <>None:
+				if g  is not None:
 					gs,cs,cons=storeSketch(g)
 				else: gs,cs,cons=[],[],[]
 				dats.append((gs,cs,cons))
@@ -521,7 +521,7 @@ class FeedbackSketch(FeaturePython):
 		reload(sketcher.demoshapes)
 		
 		sh=sketcher.demoshapes.myShape(obj,obj.shapeBuilder)
-		if sh<>None: obj.Shape=sh
+		if sh is not None: obj.Shape=sh
 
 
 ##\cond
@@ -645,7 +645,7 @@ def run_test_reverse_Constraints():
 	cxi=[]
 	for i,c in  enumerate(csts):
 		print "!",c.Name,"!"
-		if c.Name<>'':
+		if c.Name != '':
 			cx.append(c)
 			cxi.append(i)
 	cxi.reverse()
@@ -679,7 +679,7 @@ def runB():
 def run_copySketch():
 	'''copy Sketch'''
 	ss=Gui.Selection.getSelection()
-	if len(ss)<>2:
+	if len(ss) != 2:
 		print "select source and target sketch!"
 		return
 	copySketch(ss[0],ss[1])

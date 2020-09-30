@@ -28,7 +28,7 @@ def showdialog(title="Fehler",text="Schau in den ReportView fuer mehr Details",d
 	msg.setIcon(QtGui.QMessageBox.Warning)
 	msg.setText(text)
 	msg.setWindowTitle(title)
-	if detail<>None:   msg.setDetailedText(detail)
+	if detail is not None:   msg.setDetailedText(detail)
 	msg.exec_()
 
 
@@ -114,7 +114,7 @@ def simplecurve(wire,ct=20,plotit=False,offset=0,debug=False):
 	#
 	# kleine aenderungen ueberspringen
 	#
-		if th<>0:
+		if th != 0:
 			nn=[zc[0]]
 			#for v in zc[1:-2]:
 			for v in range(len(zc)-2):

@@ -1,7 +1,9 @@
-import FreeCAD 
+import FreeCAD
 import FreeCADGui
 
 import numpy as np
+
+from .debug import reload_module
 
 
 def srun(w):
@@ -9,7 +11,7 @@ def srun(w):
 	a=w.target
 	model='modelS'
 	import nurbswb.needle_models
-	reload(nurbswb.needle_models)
+	reload_module(nurbswb.needle_models)
 	lm=nurbswb.needle_models.listModels(silent=True)
 	print lm[w.m.currentIndex()]
 	model=lm[w.m.currentIndex()][0]
@@ -23,7 +25,7 @@ from PySide import QtGui, QtCore
 def MyDialog(target):
 
 	import nurbswb.needle_models
-	reload(nurbswb.needle_models)
+	reload_module(nurbswb.needle_models)
 	lm=nurbswb.needle_models.listModels()
 
 	w=QtGui.QWidget()
@@ -40,13 +42,13 @@ def MyDialog(target):
 
 
 	combo = QtGui.QComboBox()
-	
+
 	for item in lm:
 		combo.addItem(str(item))
-	
+
 
 	w.m=combo
-	combo.activated.connect(lambda:srun(w))  
+	combo.activated.connect(lambda:srun(w))
 
 	box.addWidget(combo)
 

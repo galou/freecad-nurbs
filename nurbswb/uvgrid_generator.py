@@ -7,10 +7,10 @@
 #-- GNU Lesser General Public License (LGPL)
 #-------------------------------------------------
 
-# generates 
+# generates
 # point clouds for curvature in u/v-direction
 # face uv grid
-# group with uv - unfolder and isoline grid 
+# group with uv - unfolder and isoline grid
 
 
 from say import *
@@ -28,8 +28,9 @@ App.ActiveDocument=App.getDocument("m09_uvgrid_generator")
 Gui.ActiveDocument=Gui.getDocument("m09_uvgrid_generator")
 '''
 
+from .debug import reload_module
 import nurbswb.nurbs_tools
-reload (nurbswb.nurbs_tools)
+reload_module (nurbswb.nurbs_tools)
 from nurbswb.nurbs_tools import kruemmung
 
 
@@ -71,7 +72,7 @@ def uvmap(edges,sf,debug):
 
 	# genauigkeit
 	anz=10
-	
+
 	pts=[]
 	direct=[0] * len(ll)
 	e=ll[0]
@@ -125,8 +126,8 @@ def uvmap(edges,sf,debug):
 			pe= e.valueAt(e.LastParameter)
 			#xprint (e.FirstParameter,e.LastParameter)
 			#xprint (ps,pe)
-			#xprint 
-			
+			#xprint
+
 			pl=e.discretize(anz)
 	#		Part.show(e)
 			(u,v)=sf.parameter(e.Vertexes[0].Point)
@@ -161,7 +162,7 @@ def uvmap(edges,sf,debug):
 
 	poly=Part.Face(Part.makePolygon(pts,True))
 
-	if debug: 
+	if debug:
 		Part.show(poly)
 		# uvgrp.addObject(App.ActiveDocument.ActiveObject)
 
@@ -178,7 +179,7 @@ def uvmap(edges,sf,debug):
 
 def genVgrid(face,sf,gridfac=10,debug=False):
 	poly=face
-	if poly == None: return 
+	if poly == None: return
 
 	try: uvgrp=App.ActiveDocument.UV
 	except: uvgrp=App.ActiveDocument.addObject("App::DocumentObjectGroup","UV")
@@ -192,7 +193,7 @@ def genVgrid(face,sf,gridfac=10,debug=False):
 	ust=gridfac*int(round(poly.BoundBox.YMax-poly.BoundBox.YMin))+2
 
 	mind=30
-	if ust <mind: ust=mind 
+	if ust <mind: ust=mind
 
 
 	yl=[]
@@ -209,13 +210,13 @@ def genVgrid(face,sf,gridfac=10,debug=False):
 	vst=19
 
 	anz1=vst
-	
+
 	kval=[]
 	kual=[]
-	
+
 	for y in yl:
 		vl=Part.makeLine((poly.BoundBox.XMin-1,y,0),(poly.BoundBox.XMax+1,y,0))
-		if debug: 
+		if debug:
 			Part.show(vl)
 			uvgrp.addObject(App.ActiveDocument.ActiveObject)
 
@@ -244,7 +245,7 @@ def genVgrid(face,sf,gridfac=10,debug=False):
 			pass
 		else:
 			anz1 += 1
-			
+
 			#xprint a[1]
 			start=a[1][0][0][0]
 			ende=a[1][-1][0][0]
@@ -293,7 +294,7 @@ def genVgrid(face,sf,gridfac=10,debug=False):
 def genUgrid(face,sf,gridfac=10,debug=False):
 	''' create u isolines '''
 	poly=face
-	if poly == None: return 
+	if poly == None: return
 
 	try: uvgrp=App.ActiveDocument.UV
 	except: uvgrp=App.ActiveDocument.addObject("App::DocumentObjectGroup","UV")
@@ -302,7 +303,7 @@ def genUgrid(face,sf,gridfac=10,debug=False):
 
 	ust=gridfac*int(round(poly.BoundBox.XMax-poly.BoundBox.XMin))+2
 	mind=30
-	if ust <mind: ust=mind 
+	if ust <mind: ust=mind
 	print ("ust",ust)
 	start=poly.BoundBox.XMin
 	ende=poly.BoundBox.XMax
@@ -318,7 +319,7 @@ def genUgrid(face,sf,gridfac=10,debug=False):
 	for ix,x in enumerate(yl):
 		vl=Part.makeLine((x,poly.BoundBox.YMin-1,0),(x,poly.BoundBox.YMax+1,0))
 
-		if debug: 
+		if debug:
 			Part.show(vl)
 			uvgrp.addObject(App.ActiveDocument.ActiveObject)
 
@@ -334,7 +335,7 @@ def genUgrid(face,sf,gridfac=10,debug=False):
 			u=x; v= start +(ende-start)*i/vst
 			ku,kv=kruemmung(sf,u,v)
 	#					if i >-10  :
-	#						if ku<>-1 and kv <>-1: 
+	#						if ku != -1 and kv  != -1:
 #			print (u,v,ku,kv)
 			if 0: # nicht fast ebenene Flaechen
 				kupts.append(FreeCAD.Vector(u,v,10*ku))
@@ -343,13 +344,13 @@ def genUgrid(face,sf,gridfac=10,debug=False):
 				p=sf.value(u,v)
 				kupts.append(FreeCAD.Vector(p.x,p.y,10000*ku))
 				kvpts.append(FreeCAD.Vector(p.x,p.y,10000*kv))
-			
+
 
 
 		if a[0]>0.01 or  len(a[1])<2:
 			#yprint ("keine/zuviel  schnittpunkte x ",ix,x,len(a[1]),a[0],a)
 			if len(a[1])>2:
-				print 
+				print
 				for p in a[1]:
 					print p[0]
 				print
@@ -396,16 +397,16 @@ def genKgrid(face,umin,umax,vmin,vmax,mode,sf,gridfac=10,obj=None,debug=False):
 	ts=time.time()
 
 	poly=face
-	if poly == None: return 
+	if poly == None: return
 
 	gridz=20
 
 	sps=[]
 
 	ust=gridfac*int(round(poly.BoundBox.XMax-poly.BoundBox.XMin))+2
-	
+
 	mind=gridz
-	if ust <mind: ust=mind 
+	if ust <mind: ust=mind
 
 	ust=gridz
 	vst=gridz
@@ -504,7 +505,7 @@ def gengrid(pts,lena,direct=2):
 	''' creates a polygon grid for a point grid'''
 
 	lenb=len(pts)//lena
-	print ("erzeuge gitter",lena,"x",lenb,"punkte",len(pts)) 
+	print ("erzeuge gitter",lena,"x",lenb,"punkte",len(pts))
 	assert(lenb*lena==len(pts))
 	pols=[]
 
@@ -550,14 +551,14 @@ def runobj(obj,fac=5):
 	for f in obj.Shape.Faces:
 		try:
 			poly,umin,umax,vmin,vmax = uvmap(f.Edges,f.Surface,debug)
-			print "genkgrid" 
+			print "genkgrid"
 			mode= 'sumabs' # 'u','v', 'sumabs','gauss', 'mean'
 			genKgrid(poly,umin,umax,vmin,vmax,mode ,f.Surface,fac,obj,debug)
 			print "DONE stop here - no grid generation"
 			return
 			l1=genVgrid(poly,f.Surface,fac,debug)
 			l2=genUgrid(poly,f.Surface,fac,debug)
-			el += l1 
+			el += l1
 			el += l2
 		except:
 			sayexc()
@@ -592,7 +593,7 @@ def runsub(f,fac=5,label="NoLAB"):
 		l1=[]
 		l1=genVgrid(poly,f.Surface,fac,debug)
 		l2=genUgrid(poly,f.Surface,fac,debug)
-		el += l1 
+		el += l1
 		el += l2
 	except:
 		sayexc()
@@ -603,7 +604,7 @@ def runsub(f,fac=5,label="NoLAB"):
 		el.append(e)
 
 	App.ActiveDocument.recompute()
-	
+
 	comp=Part.makeCompound(el)
 	te=time.time()
 	print "Creation time ",round(te-ts,2)
@@ -628,7 +629,7 @@ def runSel(fac=3):
 					label=ss.ObjectName + " " + subn[i] + " UVGrid "
 					print ("create  ",label, "for ",obj.Surface)
 					runsub(obj,fac,label)
-					
+
 			else:
 				print("create for all faces of the object",ss.Object.Label)
 				obj=ss.Object

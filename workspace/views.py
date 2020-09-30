@@ -157,7 +157,7 @@ class QuadView(PartFeature):
 		obj.addProperty("App::PropertyBool","fitAll","Render")
 		obj.addProperty("App::PropertyLinkList","objs","Render")
 
-		if label <> None:
+		if label  !=  None:
 			obj.Label = label
 
 
@@ -218,7 +218,7 @@ class QuadView(PartFeature):
 					marker.addChild(nodeA)
 
 				c=view.getSoRenderManager().getCamera()
-				if val <>0:
+				if val  != 0:
 					c.orientation=FreeCAD.Rotation(	AxisAngle[val-1][0],AxisAngle[val-1][1]).Q
 
 				#replace the objects
@@ -240,7 +240,7 @@ class QuadView(PartFeature):
 			val=getattr(fp,prop)
 			if val>=len(AxisAngle)or val<0: setattr(fp,prop,val%len(AxisAngle))
 			val=getattr(fp,prop)
-			if val<>0:
+			if val != 0:
 				if prop=="A_OrientationMode":
 					fp.A_Axis=AxisAngle[val-1][0]
 					fp.A_Angle=AxisAngle[val-1][1]
@@ -677,7 +677,7 @@ class ViewH2(PartFeature):
 		obj.addProperty("App::PropertyLink","obja","Render")
 		obj.addProperty("App::PropertyLink","objb","Render")
 
-		if label <> None:
+		if label  !=  None:
 			obj.Label = label
 
 
@@ -741,7 +741,7 @@ class ViewH2(PartFeature):
 					marker.addChild(nodeA)
 
 				c=view.getSoRenderManager().getCamera()
-				if val <>0:
+				if val  != 0:
 					c.orientation=FreeCAD.Rotation(	AxisAngle[val-1][0],AxisAngle[val-1][1]).Q
 
 				#replace the objects
@@ -763,7 +763,7 @@ class ViewH2(PartFeature):
 			val=getattr(fp,prop)
 			if val>=len(AxisAngle)or val<0: setattr(fp,prop,val%len(AxisAngle))
 			val=getattr(fp,prop)
-			if val<>0:
+			if val != 0:
 				if prop=="A_OrientationMode":
 					fp.A_Axis=AxisAngle[val-1][0]
 					fp.A_Angle=AxisAngle[val-1][1]
@@ -1019,7 +1019,7 @@ class DarkRoom(PartFeature):
 		
 		
 
-		if label <> None:
+		if label  !=  None:
 			obj.Label = label
 
 
@@ -1082,7 +1082,7 @@ class DarkRoom(PartFeature):
 					marker.addChild(nodeA)
 
 				c=view.getSoRenderManager().getCamera()
-				if val <> 0:
+				if val  !=  0:
 					c.orientation=FreeCAD.Rotation(	AxisAngle[val-1][0],AxisAngle[val-1][1]).Q
 				else:
 					c.orientation=FreeCAD.Rotation(	fp.A_Axis,fp.A_Angle).Q
@@ -1171,7 +1171,7 @@ class DarkRoom(PartFeature):
 			val=getattr(fp,prop)
 			if val>=len(AxisAngle)or val<0: setattr(fp,prop,val%len(AxisAngle))
 			val=getattr(fp,prop)
-			if val<>0:
+			if val != 0:
 				if prop=="A_OrientationMode":
 					fp.A_Axis=AxisAngle[val-1][0]
 					fp.A_Angle=AxisAngle[val-1][1]

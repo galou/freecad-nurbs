@@ -52,7 +52,7 @@ class MyBSpline(PartFeature):
 		if fp.mode=="poles":
 			sp.buildFromPoles(pts)
 		elif fp.mode=="interpolate":
-			if fp.InitialTangent.Length<>0 and fp.FinalTangent.Length<>0: 
+			if fp.InitialTangent.Length != 0 and fp.FinalTangent.Length != 0: 
 				sp.interpolate(pts,InitialTangent=fp.InitialTangent,FinalTangent=fp.FinalTangent)
 			elif 1:
 				# tangenten an einzelne Punkte
@@ -83,7 +83,7 @@ class MyBSpline(PartFeature):
 
 		elif fp.mode=="approximate":
 			paramtype=fp.paramtype
-			if paramtype<>'Default':
+			if paramtype != 'Default':
 				sp.approximate(Points=pts,ParamType=paramtype,DegMax=3)
 			else:
 				sp.approximate(pts)
@@ -92,12 +92,12 @@ class MyBSpline(PartFeature):
 
 
 	def onChanged(self, fp, prop):
-		if prop=="wire" and fp.wire <> None:
+		if prop=="wire" and fp.wire  !=  None:
 			sp=self.recompute(fp)
 			fp.Shape=sp.toShape()
 
 	def execute(self, fp):
-		if  fp.wire <> None:
+		if  fp.wire  !=  None:
 			sp=self.recompute(fp)
 			fp.Shape=sp.toShape()
 
